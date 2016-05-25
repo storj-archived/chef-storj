@@ -1,0 +1,39 @@
+{
+  "keypath": "<%= @key_path %>",
+  "address": "<%= @payment_address %>",
+  "storage": {
+    "path": "<%= @storage_path %>",
+    "size": <%= @storj_size %>,
+    "unit": "<%= @storj_unit %>"
+  },
+  "network": {
+    "address": "<%= @network_address %>",
+    "port": <%= @network_port %>,
+    "seeds": [
+      <% seed_count = @network_seeds.length %>
+      <% @network_seeds.each_index do |seed_index| %>
+        <% if ( seed_index + 1 ) == seed_count %>
+      "<%= @network_seeds[seed_index] %>",
+        <% else %>
+      "<%= @network_seeds[seed_index] %>"
+        <% end %>
+      <% end %>
+    ],
+    "opcodes": [
+      "0f01020202",
+      "0f02020202",
+      "0f03020202"
+    ],
+    "forward": <%= @network_forward %>,
+    "tunnels": <%= @network_tunnels %>,
+    "tunnelport": <%= @network_tunnelport %>,
+    "gateways": {
+      "min": <%= @network_gateways_min %>,
+      "max": <%= @network_gateways_max %>
+    }
+  },
+  "telemetry": {
+    "service": "<%= @telemetry_service %>",
+    "enabled": <%= @telemetry_enabled %>
+  }
+}

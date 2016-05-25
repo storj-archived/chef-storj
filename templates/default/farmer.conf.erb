@@ -1,0 +1,17 @@
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid <%= @user %> #don't run the process as root. You are asking for trouble if you do
+setgid <%= @group %>
+
+env APPDIR=<%= @app_dir %>
+env NODE_ENV=<%= @node_env %>
+env HOME=<%= @home %>
+
+script
+    chdir $APPDIR
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> >> <%= @log_path %> 2>&1'
+end script
+
+start on startup
+respawn
