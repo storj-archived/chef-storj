@@ -45,13 +45,13 @@ template File.join(node['storj']['farmer']['home'], node['storj']['farmer']['dat
   group node['storj']['farmer']['group']
   variables ({
     :key_path => File.join(node['storj']['farmer']['home'], node['storj']['farmer']['data_dir'], node['storj']['farmer']['key_file']),
-    :payment_addres => node['storj']['farmer']['payment_address'],
+    :payment_address => node['storj']['farmer']['payment_address'],
     :storage_path => File.join(node['storj']['farmer']['home'], node['storj']['farmer']['data_dir']),
     :storage_size => node['storj']['farmer']['storage']['size'],
     :storage_unit => node['storj']['farmer']['storage']['unit'],
     :network_address => public_ip_address,
     :network_port => node['storj']['farmer']['network']['port'],
-    :netwrok_seeds => node['storj']['farmer']['network']['seeds'],
+    :network_seeds => node['storj']['farmer']['network']['seeds'],
     :network_forward => node['storj']['farmer']['network']['forward'],
     :network_tunnels => node['storj']['farmer']['network']['tunnels'],
     :network_tunnelport => node['storj']['farmer']['network']['tunnelport'],
