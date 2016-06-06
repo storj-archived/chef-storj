@@ -1,6 +1,7 @@
 default['storj']['farmer']['user'] = 'storj'
 default['storj']['farmer']['group'] = 'storj'
 default['storj']['farmer']['home'] = '/opt/storj'
+default['storj']['farmer']['version'] = 'v0.7.3'
 default['storj']['farmer']['app_dir'] = "#{node['storj']['farmer']['home']}/farmer"
 default['storj']['farmer']['log_dir'] = '/var/log/storj'
 default['storj']['farmer']['log_file'] = 'farmer.log'
@@ -8,7 +9,8 @@ default['storj']['farmer']['repo'] = 'https://github.com/Storj/storjshare-cli.gi
 default['storj']['farmer']['node_env'] = 'production'
 default['storj']['farmer']['revision'] = 'HEAD'
 default['storj']['farmer']['node_index'] = 'bin/farmer.js'
-default['storj']['farmer']['data_dir'] = '.storj-farmer-cli'
+default['storj']['farmer']['password'] = 'thisshouldbeasupersecurepasswordforyourfarmer'
+default['storj']['farmer']['data_dir'] = '.storjshare'
 default['storj']['farmer']['key_file'] = 'id_ecdsa'
 default['storj']['farmer']['payment_address'] = '12sudHQtCt8Wp9X7V9U69CjzG6SFCKvgEZ'
 default['storj']['farmer']['storage']['size'] = 10

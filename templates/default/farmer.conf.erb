@@ -7,10 +7,12 @@ setgid <%= @group %>
 env APPDIR=<%= @app_dir %>
 env NODE_ENV=<%= @node_env %>
 env HOME=<%= @home %>
+env STORJ_PROTOCOL=<%= @storj_protocol %>
+env FARMER_PW=<%= @farmer_pw %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> >> <%= @log_path %> 2>&1'
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> -p $FARMER_PW >> <%= @log_path %> 2>&1'
 end script
 
 start on startup

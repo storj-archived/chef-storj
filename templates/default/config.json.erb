@@ -3,8 +3,8 @@
   "address": "<%= @payment_address %>",
   "storage": {
     "path": "<%= @storage_path %>",
-    "size": <%= @storj_size %>,
-    "unit": "<%= @storj_unit %>"
+    "size": <%= @storage_size %>,
+    "unit": "<%= @storage_unit %>"
   },
   "network": {
     "address": "<%= @network_address %>",
@@ -13,9 +13,9 @@
       <% seed_count = @network_seeds.length %>
       <% @network_seeds.each_index do |seed_index| %>
         <% if ( seed_index + 1 ) == seed_count %>
-      "<%= @network_seeds[seed_index] %>",
-        <% else %>
       "<%= @network_seeds[seed_index] %>"
+        <% else %>
+      "<%= @network_seeds[seed_index] %>",
         <% end %>
       <% end %>
     ],
