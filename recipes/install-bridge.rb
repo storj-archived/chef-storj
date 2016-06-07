@@ -1,19 +1,3 @@
-include_recipe 'filebeat'
-
-filebeat_prospector 'bridge-nodejs' do
-  paths ['/var/log/storj/*.log']
-  document_type 'nodejs-access'
-  scan_frequency '5s'
-  fields_under_root true
-  fields ({
-    'environment' => node['chef_environment'],
-    'app' => 'bridge',
-    'type' => 'nodejs-access',
-    'log_type' => 'nodejs-access',
-    'log_format' => 'json'
-  })
-end
-
 include_recipe 'nvm'
 
 nvm_install 'v4.4.4' do
