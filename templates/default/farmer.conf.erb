@@ -7,7 +7,9 @@ setgid <%= @group %>
 env APPDIR=<%= @app_dir %>
 env NODE_ENV=<%= @node_env %>
 env HOME=<%= @home %>
-env STORJ_PROTOCOL=<%= @storj_protocol %>
+<% if @storj_network %>
+env STORJ_NETWORK=<%= @storj_network %>
+<% end %>
 env FARMER_PW=<%= @farmer_pw %>
 
 script

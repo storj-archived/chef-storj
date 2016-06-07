@@ -21,16 +21,11 @@ directory File.join(node['storj']['farmer']['home'], node['storj']['farmer']['da
   action :create
 end
 
-storj_protocol = node['storj']['farmer']['version']
-if node['storj']['farmer']['protocol']
-  storj_protocol += "-#{node['storj']['farmer']['protocol']}"
-end
-
 template '/etc/init/farmer.conf' do
   variables ({
     :user => node['storj']['farmer']['user'],
     :group => node['storj']['farmer']['group'],
-    :storj_protocol => storj_protocol,
+    :storj_network => node['storj']['farmer']['network_name'],
     :app_dir => node['storj']['farmer']['app_dir'],
     :log_path => File.join(node['storj']['farmer']['log_dir'], node['storj']['farmer']['log_file']),
     :node_env => node['storj']['farmer']['node_env'],
