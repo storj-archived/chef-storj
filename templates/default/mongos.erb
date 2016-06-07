@@ -1,0 +1,14 @@
+sharding:
+  configDB: <%= @configDB %>
+net:
+  port: <%= @listenPort %>
+  ssl:
+    mode: requireSSL
+    allowConnectionsWithoutCertificates: true
+    allowInvalidCertificates: true
+    PEMKeyFile: <%= @key_file %>
+    CAFile: <%= @ca_file %>
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongos.log

@@ -1,0 +1,20 @@
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid <%= @user %> #don't run the process as root. You are asking for trouble if you do
+setgid <%= @group %>
+
+env APPDIR=<%= @app_dir %>
+env NODE_ENV=<%= @node_env %>
+env HOME=<%= @home %>
+<% if @storj_network %>
+env STORJ_NETWORK=<%= @storj_network %>
+<% end %>
+
+script
+    chdir $APPDIR
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node bin/storj-bridge.js >> /var/log/storj/bridge.log 2>&1'
+end script
+
+start on startup
+respawn

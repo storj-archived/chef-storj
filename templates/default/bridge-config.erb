@@ -1,0 +1,62 @@
+{
+  "server": {
+    "host": "<%= @server_host %>",
+    "port": <%= @server_port %>,
+    "ssl": {
+      "cert": <%= @server_ssl_cert %>
+    }
+  },
+  "storage": [
+  <% @storage.each_with_index do |storage_node_obj, idx| %>
+    <% storage_node = @storage[storage_node_obj[0]] %>
+    {
+      "name": "<%= storage_node['name'] %>",
+      "host": "<%= storage_node['host'] %>",
+      "port": <%= storage_node['port'] %>,
+      "ssl": <%= storage_node['ssl'] %>,
+      "user": "<%= storage_node['user'] %>",
+      "pass": "<%= storage_node['pass'] %>",
+      "mongos": {
+        "checkServerIdentity": <%= storage_node['mongos']['checkServerIdentity'] %>,
+        "ssl": <%= storage_node['mongos']['ssl'] %>,
+        "sslValidate": <%= storage_node['mongos']['sslValidate'] %>
+      <% if ( idx + 1 ) == @storage.length %>
+      }
+      <% else %>
+      },
+      <% end %>
+    }
+  <% end %>
+  ],
+  "network": {
+    "minions": [
+    <% @network_minions.each_with_index do |minion_obj, idx| %>
+      <% minion = @network_minions[minion_obj[0]] %>
+      {
+        "bridge": <%= minion['bridge'] %>,
+        "address": "<%= minion['address'] %>",
+        "port": <%= minion['port'] %>,
+        "tunport": <%= minion['tunport'] %>,
+        "datadir": "<%= minion['datadir'] %>",
+        "tunnels": <%= minion['tunnels'] %>,
+        "gateways": { "min": <%= minion['gateways']['min'] %>, "max": <%= minion['gateways']['max'] %> },
+        "privkey": "<%= minion['privkey'] %>"
+      <% if ( idx + 1 ) == @network_minions.length %>
+      }
+      <% else %>
+      },
+      <% end %>
+    <% end %>
+    ]
+  },
+  "mailer": {
+    "host": "<%= @mailer_host %>",
+    "port": <%= @mailer_port %>,
+    "auth": {
+      "user": "<%= @mailer_auth_user %>",
+      "pass": "<%= @mailer_auth_pass %>"
+    },
+    "secure": <%= @mailer_secure %>,
+    "from": "<%= @mailer_from %>"
+  }
+}
