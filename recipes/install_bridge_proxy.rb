@@ -10,8 +10,8 @@ include_recipe 'nginx::source'
 nginx_site 'bridge-proxy-http' do
   template 'bridge-proxy-http.erb'
   variables ({
-    :url => node['bridge']['url'],
-    :upstream_hosts => node['bridge']['upstream_hosts']
+    :url => node['storj']['bridge']['url'],
+    :upstream_hosts => node['storj']['bridge']['upstream_hosts']
   })
   notifies :reload, 'service[nginx]', :immediately
 end
@@ -19,20 +19,20 @@ end
 # Generate SSL certs for bridge proxy
 include_recipe 'letsencrypt'
 
-letsencrypt_certificate node['bridge']['url'] do
-  fullchain "/etc/ssl/certs/#{node['bridge']['url']}.crt"
-  key      "/etc/ssl/private/#{node['bridge']['url']}.key"
+letsencrypt_certificate node['storj']['bridge']['url'] do
+  fullchain "/etc/ssl/certs/#{node['storj']['bridge']['url']}.crt"
+  key      "/etc/ssl/private/#{node['storj']['bridge']['url']}.key"
   method   'http'
   wwwroot  '/tmp/letsencrypt-auto'
-  notifies :create, "letsencrypt_certificate[#{node['bridge']['url']}]", :immediately
+  notifies :create, "letsencrypt_certificate[#{node['storj']['bridge']['url']}]", :immediately
 end
 
 # Once letxencrypt is successful, add nginx bridge proxy config
 nginx_site 'bridge-proxy-https' do
   template 'bridge-proxy-https.erb'
   variables ({
-    :url => node['bridge']['url'],
-    :upstream_hosts => node['bridge']['upstream_hosts']
+    :url => node['storj']['bridge']['url'],
+    :upstream_hosts => node['storj']['bridge']['upstream_hosts']
   })
   action :nothing
   notifies :reload, 'service[nginx]', :immediately

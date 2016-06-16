@@ -10,11 +10,11 @@ env HOME=<%= @home %>
 <% if @storj_network %>
 env STORJ_NETWORK=<%= @storj_network %>
 <% end %>
-env FARMER_PW=<%= @farmer_pw %>
+env SHARE_PW=<%= @share_pw %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> -p $FARMER_PW start >> <%= @log_path %> 2>&1'
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> -p $SHARE_PW start >> <%= @log_path %> 2>&1'
 end script
 
 start on startup

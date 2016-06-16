@@ -41,7 +41,7 @@ server {
         location / {
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
-                proxy_pass http://api_servers_http;
+                proxy_pass http://api_servers_http_ssl;
                 #proxy_request_buffering off;
                 proxy_next_upstream non_idempotent;
                 proxy_http_version 1.1;
@@ -76,7 +76,7 @@ server {
         location / {
                 proxy_set_header Host $host;
                 proxy_set_header X-Real-IP $remote_addr;
-                proxy_pass http://api_servers_tunnel;
+                proxy_pass http://api_servers_tunnel_ssl;
                 proxy_request_buffering off;
                 proxy_next_upstream non_idempotent;
                 proxy_http_version 1.1;

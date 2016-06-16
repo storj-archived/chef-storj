@@ -12,10 +12,17 @@ provisioner:
 
 platforms:
   - name: ubuntu-14.04
-  - name: centos-7.1
 
 suites:
-  - name: default
+  - name: share
     run_list:
-      - recipe[storj::default]
+      - recipe[storj::share]
+    attributes:
+  - name: bridge
+    run_list:
+      - recipe[storj::bridge]
+    attributes:
+  - name: bridge_proxy
+    run_list:
+      - recipe[storj::bridge_proxy]
     attributes:

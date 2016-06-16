@@ -1,7 +1,7 @@
 default['storj']['bridge']['repo'] = 'https://github.com/Storj/bridge.git'
 default['storj']['bridge']['revision'] = 'v0.7.3'
 default['storj']['bridge']['version'] = 'v0.7.3'
-default['storj']['bridge']['home'] = '/opt/storj'
+default['storj']['bridge']['home'] = node['storj']['home']
 default['storj']['bridge']['config-dir'] = '.storj-bridge'
 default['storj']['bridge']['node-env'] = 'production'
 default['storj']['bridge']['app-dir'] = "#{node['storj']['bridge']['home']}/bridge"
@@ -13,7 +13,8 @@ default['storj']['bridge']['url'] = 'api.storj.io'
 
 # These are the defaults for creating a Bridge API node
 default['storj']['bridge']['server-host'] = node['storj']['bridge']['url']
-default['storj']['bridge']['server-port'] = 8080,
+default['storj']['bridge']['server-port'] = 8080
+default['storj']['bridge']['timeout'] = 480000
 default['storj']['bridge']['server-ssl-cert'] = true
 default['storj']['bridge']['storage']['db1'] = {
   "name" => "bridge",

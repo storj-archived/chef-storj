@@ -20,12 +20,12 @@
         "checkServerIdentity": <%= storage_node['mongos']['checkServerIdentity'] %>,
         "ssl": <%= storage_node['mongos']['ssl'] %>,
         "sslValidate": <%= storage_node['mongos']['sslValidate'] %>
-      <% if ( idx + 1 ) == @storage.length %>
       }
-      <% else %>
-      },
-      <% end %>
+    <% if ( idx + 1 ) == @storage.length %>
     }
+    <% else %>
+    },
+    <% end %>
   <% end %>
   ],
   "network": {
