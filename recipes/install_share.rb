@@ -1,3 +1,5 @@
+require 'securerandom'
+
 include_recipe 'nvm'
 
 nvm_install 'v4.4.4' do
@@ -9,6 +11,7 @@ nvm_install 'v4.4.4' do
   action :create
 end
 
+# Create directories needed
 directory node['storj']['share']['log_dir'] do
   owner node['storj']['share']['user']
   group node['storj']['share']['group']
@@ -19,6 +22,49 @@ directory File.join(node['storj']['share']['home'], node['storj']['share']['data
   owner node['storj']['share']['user']
   group node['storj']['share']['group']
   action :create
+end
+
+# Check out correct version of StorjShare from Git
+git node['storj']['share']['app_dir'] do
+  repository node['storj']['share']['repo']
+  revision node['storj']['share']['revision']
+  user node['storj']['share']['user']
+  group node['storj']['share']['group']
+  environment Hash['HOME' => node['storj']['share']['home']]
+  action :sync
+  notifies :run, 'bash[install_share]', :immediately
+end
+
+# Create the service for StorjShare
+service 'share' do
+  action :nothing
+end
+
+generate_key_script_path = File.join(node['storj']['share']['script_dir'], 'generate_storjshare_key.js')
+
+cookbook_file generate_key_script_path do
+  action :create
+end
+
+ruby_block 'generate_password' do
+  block do
+    node.set['storj']['share']['password'] = SecureRandom.hex
+  end
+  not_if { File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa')) }
+  notifies :run, 'bash[generate_key]', :immediately
+end
+
+bash 'generate_key' do
+  cwd "#{node['storj']['share']['app_dir']}"
+  user node['storj']['share']['user']
+  group node['storj']['share']['group']
+  environment Hash['HOME' => node['storj']['share']['home']]
+  code <<-EOH
+    source #{File.join(node['storj']['share']['home'], '.nvm/nvm.sh')}
+    PASSWORD=#{node['storj']['share']['password']} NODE_PATH=#{File.join(node['storj']['share']['app_dir'], 'node_modules')} node #{generate_key_script_path}
+  EOH
+  notifies :restart, 'service[share]'
+  action :nothing
 end
 
 template '/etc/init/share.conf' do
@@ -35,6 +81,7 @@ template '/etc/init/share.conf' do
   })
   action :create
 end
+    #:share_pw => node['storj']['share']['password'],
 
 if node['cloud_v2']
   public_ip_address = node['cloud_v2']['public_ipv4_addrs'][0]
@@ -42,7 +89,7 @@ else
   public_ip_address = node['ipaddress']
 end
 
-template File.join(node['storj']['share']['home'], node['storj']['share']['data_dir'], 'config.json') do
+template File.join(node['storj']['share']['data_path'], 'config.json') do
   owner node['storj']['share']['user']
   group node['storj']['share']['group']
   variables ({
@@ -65,15 +112,7 @@ template File.join(node['storj']['share']['home'], node['storj']['share']['data_
   action :create
 end
 
-git node['storj']['share']['app_dir'] do
-  repository node['storj']['share']['repo']
-  revision node['storj']['share']['revision']
-  user node['storj']['share']['user']
-  group node['storj']['share']['group']
-  action :sync
-  notifies :run, 'bash[install_share]', :immediately
-end
-
+# Install or Update StorjShare and restart on any changes
 bash 'install_share' do
   cwd "#{node['storj']['share']['app_dir']}"
   user node['storj']['share']['user']
@@ -84,11 +123,6 @@ bash 'install_share' do
     rm -rf ./node_modules
     npm install
   EOH
-  notifies :restart, 'service[share]', :immediately
+  notifies :restart, 'service[share]'
   action :nothing
 end
-
-service 'share' do
-  action :nothing
-end
-
