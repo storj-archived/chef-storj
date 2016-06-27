@@ -37,9 +37,11 @@ end
 template File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir'], 'config', node['storj']['bridge']['node-env']) do
   source 'bridge-config.erb'
   variables({
+    :messaging => node['storj']['bridge']['messaging'],
     :server_host => node['storj']['bridge']['server-host'],
     :server_port => node['storj']['bridge']['server-port'],
     :server_ssl_cert => node['storj']['bridge']['server-ssl-cert'],
+    :server_timeout => node['storj']['bridge']['server-timeout'],
     :storage => node['storj']['bridge']['storage'],
     :network_minions => node['storj']['bridge']['network']['minions'],
     :mailer_host => node['storj']['bridge']['mailer']['host'],

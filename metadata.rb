@@ -4,7 +4,7 @@ maintainer_email 'philip@storj.io'
 license 'AGPL-3.0'
 description 'Installs/Configures Storj Services'
 long_description 'Installs/Configures Storj Services'
-version '0.1.2'
+version '0.1.4'
 
 depends 'nvm'
 depends 'apt'

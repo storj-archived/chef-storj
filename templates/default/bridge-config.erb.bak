@@ -1,7 +1,7 @@
 {
   "server": {
     "host": "<%= @server_host %>",
-    "timeout": <%= @server_timeout %>,
+    "timeout": "<%= @server_timeout %>",
     "port": <%= @server_port %>,
     "ssl": {
       "cert": <%= @server_ssl_cert %>
@@ -41,25 +41,22 @@
           "durable": <%= queue['options']['durable'] %>,
           "arguments": {
           <% queueCount = 0 %>
-          <% if queue['options']['arguments'] %>
-            <% queue['options']['arguments'].each do |k,v| %>
-              <% queueCount += 1 %>
-              <% argumentCount = queue['options']['arguments'].length %>
-              <% isLastArg = ( queueCount == argumentCount ) %>
-              <% if v.integer? %>
+          <% queue['options']['arguments'].each do |k,v| %>
+            <% queueCount += 1 %>
+            <% argumentCount = ( queue['options']['arguments'].length + 1 ) %>
+            <% isLastArg =  ( queueCount == argumentCount ) %>
+            <% if v.integer? %>
             "<%= k %>": <%= v %><% if !isLastArg %>,<% end %>
-              <% else %>
-            "<%= k %>": "<%= v %>"<% if !isLastArg %>,<% end %>
-              <% end %>
+            <% else %>
+            "<%= k %>": "<%= v %>"<% if !isLastArg %>,<%  end %>
             <% end %>
           <% end %>
           }
         }
-        <% if ( idx + 1 ) == @messaging['queues'].length %>
+      <% if ( idx + 1 ) == @messaging['queues'].length %>
       }
-        <% else %>
+      <% else %>
       },
-        <% end %>
       <% end %>
     },
     "exchanges": {
@@ -72,11 +69,11 @@
           "durable": <%= exchange['options']['durable'] %>
         }
       }
-      <% if ( idx + 1 ) == @messaging['exchanges'].length %>
+    <% end %>
+    <% if ( idx + 1 ) == @messaging['exchanges']['length'] %>
     }
-      <% else %>
+    <% else %>
     },
-      <% end %>
     <% end %>
   },
   "network": {
@@ -88,6 +85,7 @@
         "address": "<%= minion['address'] %>",
         "port": <%= minion['port'] %>,
         "tunport": <%= minion['tunport'] %>,
+        "datadir": "<%= minion['datadir'] %>",
         "tunnels": <%= minion['tunnels'] %>,
         "gateways": { "min": <%= minion['gateways']['min'] %>, "max": <%= minion['gateways']['max'] %> },
         "privkey": "<%= minion['privkey'] %>"
