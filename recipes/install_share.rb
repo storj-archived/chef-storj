@@ -46,12 +46,8 @@ cookbook_file generate_key_script_path do
   action :create
 end
 
-ruby_block 'generate_password' do
-  block do
-    node.set['storj']['share']['password'] = SecureRandom.hex
-  end
-  not_if { File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa')) }
-  notifies :run, 'bash[generate_key]', :immediately
+if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa'))
+  node.set['storj']['share']['password'] = SecureRandom.hex
 end
 
 bash 'generate_key' do
@@ -63,8 +59,9 @@ bash 'generate_key' do
     source #{File.join(node['storj']['share']['home'], '.nvm/nvm.sh')}
     PASSWORD=#{node['storj']['share']['password']} NODE_PATH=#{File.join(node['storj']['share']['app_dir'], 'node_modules')} node #{generate_key_script_path}
   EOH
+  not_if { File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa')) }
   notifies :restart, 'service[share]'
-  action :nothing
+  action :run
 end
 
 template '/etc/init/share.conf' do
@@ -79,6 +76,7 @@ template '/etc/init/share.conf' do
     :share_pw => node['storj']['share']['password'],
     :home => node['storj']['share']['home']
   })
+  notifies :restart, 'service[share]'
   action :create
 end
     #:share_pw => node['storj']['share']['password'],
