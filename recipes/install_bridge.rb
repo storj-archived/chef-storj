@@ -9,6 +9,13 @@ nvm_install 'v4.4.4' do
   action :create
 end
 
+directory File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir']) do
+  recursive true
+  owner node['storj']['bridge']['user']
+  group node['storj']['bridge']['group']
+  action :create
+end
+
 directory File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir'], 'config') do
   recursive true
   owner node['storj']['bridge']['user']

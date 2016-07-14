@@ -5,7 +5,6 @@ upstream api_servers_http {
   server <%= host %>:8080;
 <% end %>
   keepalive 64;
-  ip_hash;
 }
 
 upstream api_servers_tunnel {
@@ -13,7 +12,6 @@ upstream api_servers_tunnel {
   server <%= host %>:8443;
 <% end %>
   keepalive 64;
-  ip_hash;
 }
 
 
