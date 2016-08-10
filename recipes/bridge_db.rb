@@ -50,100 +50,40 @@ directory "/etc/mongodb" do
   action :create
 end
 
-directory "/data/mongodb/data1" do
+directory "/data/mongodb/data" do
   recursive true
-  action :create
-end
-
-directory "/data/mongodb/data2" do
-  recursive true
-  action :create
-end
-
-directory "/data/mongodb/data3" do
-  recursive true
+  owner "mongodb"
+  group "mongodb"
   action :create
 end
 
 directory "/data/mongodb/config" do
   recursive true
+  owner "mongodb"
+  group "mongodb"
   action :create
 end
 
-template "/etc/mongodb/mongod-1" do
+template "/etc/mongodb/mongod" do
   source 'mongod.erb'
   variables ({
     :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongod-1',
+    :instance => 'mongod',
     :listenPort => '27017',
-    :replSetName => 'bridge-staging-1',
-    :dataDir => '/data/mongodb/data1',
+    :replSetName => node['storj']['bridge']['db']['mongod']['replset_name'],
+    :dataDir => '/data/mongodb/data',
     :key_file => node['mongodb']['server_pem'],
     :ca_file => node['mongodb']['client_pem']
   })
 end
 
-template "/etc/mongodb/mongod-2" do
-  source 'mongod.erb'
-  variables ({
-    :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongod-2',
-    :listenPort => '27117',
-    :replSetName => 'bridge-staging-1',
-    :dataDir => '/data/mongodb/data2',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
-  })
-end
-
-template "/etc/mongodb/mongod-3" do
-  source 'mongod.erb'
-  variables ({
-    :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongod-3',
-    :listenPort => '27217',
-    :replSetName => 'bridge-staging-1',
-    :dataDir => '/data/mongodb/data3',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
-  })
-end
-
-template "/etc/mongodb/mongoc-1" do
+template "/etc/mongodb/mongoc" do
   source 'mongoc.erb'
   variables ({
     :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongoc-1',
+    :instance => 'mongoc',
     :listenPort => '27019',
-    :dataDir => '/data/mongodb/config-1',
-    :replSetName => 'config',
-    :oplogSizeMB => '1024',
-    :key_file => node['mongodb']['client_pem'],
-    :ca_file => node['mongodb']['server_pem']
-  })
-end
-
-template "/etc/mongodb/mongoc-2" do
-  source 'mongoc.erb'
-  variables ({
-    :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongoc-2',
-    :listenPort => '27119',
-    :dataDir => '/data/mongodb/config-2',
-    :replSetName => 'config',
-    :oplogSizeMB => '1024',
-    :key_file => node['mongodb']['client_pem'],
-    :ca_file => node['mongodb']['server_pem']
-  })
-end
-
-template "/etc/mongodb/mongoc-3" do
-  source 'mongoc.erb'
-  variables ({
-    :bindIp => node['mongodb']['bind_ips'],
-    :instance => 'mongoc-3',
-    :listenPort => '27219',
-    :dataDir => '/data/mongodb/config-3',
+    :dataDir => '/data/mongodb/config',
     :replSetName => 'config',
     :oplogSizeMB => '1024',
     :key_file => node['mongodb']['client_pem'],
@@ -153,7 +93,7 @@ end
 
 template "/etc/mongodb/mongos" do
   variables ({
-    :configDB => 'config/bridge-db-1:27019,bridge-db-1:27119,bridge-db-1:27219',
+    :configDB => node['storj']['bridge']['db']['mongos']['config_db'],
     :instance => 'mongos',
     :listenPort => '27020',
     :key_file => node['mongodb']['server_pem'],
@@ -161,11 +101,11 @@ template "/etc/mongodb/mongos" do
   })
 end
 
-template "/etc/init/mongod-1.conf" do
+template "/etc/init/mongod.conf" do
   source 'mongo.conf.erb'
   variables ({
-    :config => '/etc/mongodb/mongod-1',
-    :instance => 'mongod-1',
+    :config => '/etc/mongodb/mongod',
+    :instance => 'mongod',
     :mode => 'mongod',
     :daemon => 'mongod',
     :key_file => node['mongodb']['server_pem'],
@@ -173,54 +113,11 @@ template "/etc/init/mongod-1.conf" do
   })
 end
 
-template "/etc/init/mongod-2.conf" do
+template "/etc/init/mongoc.conf" do
   source 'mongo.conf.erb'
   variables ({
-    :config => '/etc/mongodb/mongod-2',
-    :instance => 'mongod-2',
-    :mode => 'mongod',
-    :daemon => 'mongod',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
-  })
-end
-template "/etc/init/mongod-3.conf" do
-  source 'mongo.conf.erb'
-  variables ({
-    :config => '/etc/mongodb/mongod-3',
-    :instance => 'mongod-3',
-    :mode => 'mongod',
-    :daemon => 'mongod',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
-  })
-end
-
-template "/etc/init/mongoc-1.conf" do
-  source 'mongo.conf.erb'
-  variables ({
-    :config => '/etc/mongodb/mongoc-1',
-    :instance => 'mongoc-1',
-    :mode => 'mongoc',
-    :daemon => 'mongod'
-  })
-end
-
-template "/etc/init/mongoc-2.conf" do
-  source 'mongo.conf.erb'
-  variables ({
-    :config => '/etc/mongodb/mongoc-2',
-    :instance => 'mongoc-2',
-    :mode => 'mongoc',
-    :daemon => 'mongod'
-  })
-end
-
-template "/etc/init/mongoc-3.conf" do
-  source 'mongo.conf.erb'
-  variables ({
-    :config => '/etc/mongodb/mongoc-3',
-    :instance => 'mongoc-3',
+    :config => '/etc/mongodb/mongoc',
+    :instance => 'mongoc',
     :mode => 'mongoc',
     :daemon => 'mongod'
   })
@@ -236,27 +133,11 @@ template "/etc/init/mongos.conf" do
   })
 end
 
-service "mongod-1" do
+service "mongod" do
   action :start
 end
 
-service "mongod-2" do
-  action :start
-end
-
-service "mongod-3" do
-  action :start
-end
-
-service "mongoc-1" do
-  action :start
-end
-
-service "mongoc-2" do
-  action :start
-end
-
-service "mongoc-3" do
+service "mongoc" do
   action :start
 end
 

@@ -14,7 +14,7 @@ default['storj']['bridge']['url'] = 'api.storj.io'
 # These are the defaults for creating a Bridge API node
 default['storj']['bridge']['server-host'] = node['storj']['bridge']['url']
 default['storj']['bridge']['server-port'] = 8080
-default['storj']['bridge']['server-timeout'] = 60000
+default['storj']['bridge']['server-timeout'] = 120000
 default['storj']['bridge']['server-ssl-cert'] = true
 default['storj']['bridge']['messaging']['url'] = 'amqp://localhost'
 default['storj']['bridge']['messaging']['queues']['renterpool'] = {

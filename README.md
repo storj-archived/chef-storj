@@ -118,6 +118,55 @@ bridge_db
 ---------
 This recipe installs and configures the Bridge api's DB.
 
+Curently, this recipe does not set up the cluster. In the future I will be implementing the mongodb chef cookbook to manage the cluster. Details on that cookbook can be found here: https://github.com/phutchins/chef-mongodb
+
+## Config Server Replica Set
+
+### Initiate the Replica Set
+
+```
+rs.initiate(
+  {
+    _id: "config",
+    configsvr: true,
+    members: [
+      { _id : 0, host : "bridge-db-g3e3:27019" },
+      { _id : 1, host : "bridge-db-ru97:27019" },
+      { _id : 2, host : "bridge-db-aokr:27019" }
+    ]
+  }
+)
+```
+
+## MongoD Replica Set
+
+### Increase the MongoDB Oplog Size
+
+For an existing cluster, refer to the MongoDB docs (here)[https://docs.mongodb.com/manual/tutorial/change-oplog-size/]...
+
+From a fresh cluster first delete the current oplog.rs db. The instance must not be configured as a replicaset so it must be reconfigured and restarted if it is.
+
+Then create the new capped colleciton setting the size. The following command will create a 10GB oplog. The larger the oplog, the longer you can go with a node down before having to do a full resync to that node. The time frame is dictated by the number and size of transactions that happen per minute on your database.
+
+```
+db.runCommand( { create: "oplog.rs", capped: true, size: (10 * 1024 * 1024 * 1024) } )
+```
+
+### Initiate the Replia Set
+```
+rs.initiate(
+  {
+    _id : "storj-bridge",
+      members: [
+        { _id : 0, host : "bridge-db-g3e3:27017" },
+        { _id : 1, host : "bridge-db-ru97:27017" },
+        { _id : 2, host : "bridge-db-aokr:27017" }
+      ]
+  }
+)
+```
+
+
 bridge_proxy
 ------------
 This recipe installs and configures the Bridge proxy which allows you to run multiple instances of the Bridge behind an Nginx proxy for scalability.
