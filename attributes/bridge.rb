@@ -8,6 +8,7 @@ default['storj']['bridge']['app-dir'] = "#{node['storj']['bridge']['home']}/brid
 default['storj']['bridge']['user'] = 'storj'
 default['storj']['bridge']['group'] = 'storj'
 default['storj']['bridge']['log-dir'] = '/var/log/storj'
+default['storj']['bridge']['log-level'] = 2
 # This is overrideen per environment
 default['storj']['bridge']['url'] = 'api.storj.io'
 

@@ -10,6 +10,9 @@ env HOME=<%= @home %>
 <% if @storj_network %>
 env STORJ_NETWORK=<%= @storj_network %>
 <% end %>
+<% if @log_level %>
+env LOG_LEVEL=<%= @log_level %>
+<% end %>
 
 script
     chdir $APPDIR

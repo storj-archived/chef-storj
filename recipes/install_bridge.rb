@@ -36,6 +36,7 @@ template '/etc/init/bridge.conf' do
     :app_dir => node['storj']['bridge']['app-dir'],
     :node_env => node['storj']['bridge']['node-env'],
     :storj_network => node['storj']['bridge']['storj-network'],
+    :log_level => node['storj']['bridge']['log-level'],
     :home => node['storj']['bridge']['home']
   })
   action :create
