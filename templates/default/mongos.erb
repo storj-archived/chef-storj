@@ -7,7 +7,9 @@ net:
     allowConnectionsWithoutCertificates: true
     allowInvalidCertificates: true
     PEMKeyFile: <%= @key_file %>
+  <% if @ca_file %>
     CAFile: <%= @ca_file %>
+  <% end %>
 systemLog:
   destination: file
   logAppend: true

@@ -23,13 +23,10 @@ include_recipe "storj"
 # Add the mongod to as a shard to the mongos instance
 # mongos> sh.addShard("bridge-staging-1/bridge-db-1:27017")
 
-node.set['mongodb']['version'] = "3.2.6"
-node.set['mongodb']['server_pem'] = "/etc/mongodb/keys/mongodb-server.pem"
-node.set['mongodb']['client_pem'] = "/etc/mongodb/keys/mongodb-client.pem"
-node.set['mongodb']['bind_ips'] = "#{node['ipaddress']},127.0.0.1"
-
 # Need to remove espy from mongodb cookbook
 #include_recipe "chef-mongodb::replicaset"
+
+# Need to manage adding all hosts to to the /etc/hosts file
 
 apt_repository "mongodb" do
   uri "http://repo.mongodb.org/apt/ubuntu"
@@ -67,37 +64,39 @@ end
 template "/etc/mongodb/mongod" do
   source 'mongod.erb'
   variables ({
-    :bindIp => node['mongodb']['bind_ips'],
+    :bindIp => node['storj']['bridge']['db']['mongod']['bind_ips'],
     :instance => 'mongod',
-    :listenPort => '27017',
+    :listenPort => node['storj']['bridge']['db']['mongod']['listen_port'],
     :replSetName => node['storj']['bridge']['db']['mongod']['replset_name'],
-    :dataDir => '/data/mongodb/data',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :dataDir => node['storj']['bridge']['db']['mongod']['data_dir'],
+    :oplogSizeMB => node['storj']['bridge']['db']['mongod']['oplog_size'],
+    :key_file => node['storj']['bridge']['db']['mongod']['server_pem'],
+    :ca_file => node['storj']['bridge']['db']['mongod']['client_pem']
   })
 end
 
 template "/etc/mongodb/mongoc" do
   source 'mongoc.erb'
   variables ({
-    :bindIp => node['mongodb']['bind_ips'],
+    :bindIp => node['storj']['bridge']['db']['mongoc']['bind_ips'],
     :instance => 'mongoc',
-    :listenPort => '27019',
-    :dataDir => '/data/mongodb/config',
-    :replSetName => 'config',
-    :oplogSizeMB => '1024',
-    :key_file => node['mongodb']['client_pem'],
-    :ca_file => node['mongodb']['server_pem']
+    :listenPort => node['storj']['bridge']['db']['mongoc']['listen_port'],
+    :dataDir => node['storj']['bridge']['db']['mongoc']['data_dir'],
+    :replSetName => node['storj']['bridge']['db']['mongoc']['replset_name'],
+    :oplogSizeMB => node['storj']['bridge']['db']['mongoc']['oplog_size'],
+    :key_file => node['storj']['bridge']['db']['mongoc']['client_pem'],
+    :ca_file => node['storj']['bridge']['db']['mongoc']['server_pem']
   })
 end
 
 template "/etc/mongodb/mongos" do
   variables ({
+    :bindIp => node['storj']['bridge']['db']['mongos']['bind_ips'],
     :configDB => node['storj']['bridge']['db']['mongos']['config_db'],
     :instance => 'mongos',
-    :listenPort => '27020',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :listenPort => node['storj']['bridge']['db']['mongos']['listen_port'],
+    :key_file => node['storj']['bridge']['db']['mongos']['server_pem'],
+    :ca_file => node['storj']['bridge']['db']['mongos']['client_pem']
   })
 end
 
@@ -108,8 +107,8 @@ template "/etc/init/mongod.conf" do
     :instance => 'mongod',
     :mode => 'mongod',
     :daemon => 'mongod',
-    :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :key_file => node['storj']['bridge']['db']['mongod']['server_pem'],
+    :ca_file => node['storj']['bridge']['db']['mongod']['client_pem']
   })
 end
 
