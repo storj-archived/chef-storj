@@ -71,6 +71,7 @@ template "/etc/mongodb/mongod" do
     :dataDir => node['storj']['bridge']['db']['mongod']['data_dir'],
     :oplogSizeMB => node['storj']['bridge']['db']['mongod']['oplog_size'],
     :key_file => node['storj']['bridge']['db']['mongod']['server_pem'],
+    :enable_ca => node['storj']['bridge']['db']['mongod']['enable_ca'],
     :ca_file => node['storj']['bridge']['db']['mongod']['client_pem']
   })
 end
@@ -85,6 +86,7 @@ template "/etc/mongodb/mongoc" do
     :replSetName => node['storj']['bridge']['db']['mongoc']['replset_name'],
     :oplogSizeMB => node['storj']['bridge']['db']['mongoc']['oplog_size'],
     :key_file => node['storj']['bridge']['db']['mongoc']['client_pem'],
+    :enable_ca => node['storj']['bridge']['db']['mongoc']['enable_ca'],
     :ca_file => node['storj']['bridge']['db']['mongoc']['server_pem']
   })
 end
@@ -96,6 +98,7 @@ template "/etc/mongodb/mongos" do
     :instance => 'mongos',
     :listenPort => node['storj']['bridge']['db']['mongos']['listen_port'],
     :key_file => node['storj']['bridge']['db']['mongos']['server_pem'],
+    :enable_ca => node['storj']['bridge']['db']['mongos']['enable_ca'],
     :ca_file => node['storj']['bridge']['db']['mongos']['client_pem']
   })
 end
