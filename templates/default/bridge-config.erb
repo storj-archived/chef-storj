@@ -1,10 +1,18 @@
 {
+  "application": {
+    "mirrors": <%= @application_mirrors %>,
+    "privateKey": "<%= @application_privatekey %>"
+  },
   "server": {
     "host": "<%= @server_host %>",
     "timeout": <%= @server_timeout %>,
     "port": <%= @server_port %>,
     "ssl": {
       "cert": <%= @server_ssl_cert %>
+    },
+    "public": {
+      "host": "<%= @server_public_host %>",
+      "port": <%= @server_public_port %>
     }
   },
   "storage": [
@@ -29,75 +37,10 @@
     <% end %>
   <% end %>
   ],
-  "messaging": {
-    "url": "<%= @messaging['url'] %>",
-    "queues": {
-    <% @messaging['queues'].each_with_index do |queue_obj, idx| %>
-      <% queue = @messaging['queues'][queue_obj[0]] %>
-      "<%= queue_obj[0] %>": {
-        "name": "<%= queue['name'] %>",
-        "options": {
-          "exclusive": <%= queue['options']['exclusive'] %>,
-          "durable": <%= queue['options']['durable'] %>,
-          "arguments": {
-          <% queueCount = 0 %>
-          <% if queue['options']['arguments'] %>
-            <% queue['options']['arguments'].each do |k,v| %>
-              <% queueCount += 1 %>
-              <% argumentCount = queue['options']['arguments'].length %>
-              <% isLastArg = ( queueCount == argumentCount ) %>
-              <% if v.integer? %>
-            "<%= k %>": <%= v %><% if !isLastArg %>,<% end %>
-              <% else %>
-            "<%= k %>": "<%= v %>"<% if !isLastArg %>,<% end %>
-              <% end %>
-            <% end %>
-          <% end %>
-          }
-        }
-        <% if ( idx + 1 ) == @messaging['queues'].length %>
-      }
-        <% else %>
-      },
-        <% end %>
-      <% end %>
-    },
-    "exchanges": {
-    <% @messaging['exchanges'].each_with_index do |exchange_obj, idx| %>
-      <% exchange = @messaging['exchanges'][exchange_obj[0]] %>
-      "<%= exchange_obj[0] %>": {
-        "name": "<%= exchange['name'] %>",
-        "type": "<%= exchange['type'] %>",
-        "options": {
-          "durable": <%= exchange['options']['durable'] %>
-        }
-      }
-      <% if ( idx + 1 ) == @messaging['exchanges'].length %>
-    }
-      <% else %>
-    },
-      <% end %>
-    <% end %>
-  },
-  "network": {
-    "minions": [
-    <% @network_minions.each_with_index do |minion_obj, idx| %>
-      <% minion = @network_minions[minion_obj[0]] %>
-      {
-        "bridge": <%= minion['bridge'] %>,
-        "address": "<%= minion['address'] %>",
-        "port": <%= minion['port'] %>,
-        "tunport": <%= minion['tunport'] %>,
-        "tunnels": <%= minion['tunnels'] %>,
-        "gateways": { "min": <%= minion['gateways']['min'] %>, "max": <%= minion['gateways']['max'] %> },
-        "privkey": "<%= minion['privkey'] %>"
-      <% if ( idx + 1 ) == @network_minions.length %>
-      }
-      <% else %>
-      },
-      <% end %>
-    <% end %>
-    ]
+  "complex": {
+    "rpcUrl": "<%= @complex_rpcurl %>",
+    "rpcUser": "<%= @complex_rpcuser %>",
+    "rpcPassword": "<%= @complex_rpcpassword %>"
   },
   "mailer": {
     "host": "<%= @mailer_host %>",

@@ -93,6 +93,8 @@ template File.join(node['storj']['share']['data_path'], 'config.json') do
   variables ({
     :key_path => File.join(node['storj']['share']['home'], node['storj']['share']['data_dir'], node['storj']['share']['key_file']),
     :payment_address => node['storj']['share']['payment_address'],
+    :loglevel => node['storj']['share']['loglevel'],
+    :concurrency => node['storj']['share']['concurrency'],
     :storage_path => File.join(node['storj']['share']['home'], node['storj']['share']['data_dir']),
     :storage_size => node['storj']['share']['storage']['size'],
     :storage_unit => node['storj']['share']['storage']['unit'],

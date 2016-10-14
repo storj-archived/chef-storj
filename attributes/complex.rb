@@ -1,0 +1,9 @@
+# Application Config
+default['storj']['complex']['user'] = 'storj'
+default['storj']['complex']['group'] = 'storj'
+default['storj']['complex']['repo'] = 'https://github.com/Storj/complex.git'
+default['storj']['complex']['revision'] = 'v1.0.0'
+default['storj']['complex']['home'] = node['storj']['home']
+default['storj']['complex']['config-dir'] = '/etc/storj'
+default['storj']['complex']['node-env'] = 'production'
+default['storj']['complex']['app-dir'] = "#{node['storj']['bridge']['home']}/complex"

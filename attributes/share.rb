@@ -1,7 +1,7 @@
 default['storj']['share']['user'] = 'storj'
 default['storj']['share']['group'] = 'storj'
 default['storj']['share']['home'] = node['storj']['home']
-default['storj']['share']['version'] = 'v0.7.3'
+default['storj']['share']['version'] = 'v7.0.0'
 default['storj']['share']['app_dir'] = "#{node['storj']['share']['home']}/share"
 default['storj']['share']['log_dir'] = '/var/log/storj'
 default['storj']['share']['log_file'] = 'share.log'
@@ -13,6 +13,8 @@ default['storj']['share']['password'] = nil
 default['storj']['share']['data_dir'] = '.storjshare'
 default['storj']['share']['data_path'] = File.join(node['storj']['share']['home'], node['storj']['share']['data_dir'])
 default['storj']['share']['key_file'] = 'id_ecdsa'
+default['storj']['share']['loglevel'] = 2
+default['storj']['share']['concurrency'] = 3
 default['storj']['share']['payment_address'] = '12sudHQtCt8Wp9X7V9U69CjzG6SFCKvgEZ'
 default['storj']['share']['storage']['size'] = 10
 default['storj']['share']['storage']['unit'] = 'GB'

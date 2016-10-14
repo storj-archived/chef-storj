@@ -1,0 +1,21 @@
+# Infrastructure Config
+default['storj']['renter']['log-dir'] = '/var/log/storj'
+
+# Application Config
+default['storj']['renter']['config']['type'] = 'Renter'
+default['storj']['renter']['config']['opts']['logLevel'] = 2
+default['storj']['renter']['config']['opts']['amqpUrl'] = "amqp://localhost"
+default['storj']['renter']['config']['opts']['amqpOpts'] = {}
+default['storj']['renter']['config']['opts']['mongoUrl'] = "mongodb://localhost:27017/storj"
+default['storj']['renter']['config']['opts']['mongoOpts'] = {}
+default['storj']['renter']['config']['opts']['networkPrivateKey'] = "/etc/storj/keys/complex.key"
+default['storj']['renter']['config']['opts']['networkOpts']['rpcPort'] = 4000
+default['storj']['renter']['config']['opts']['networkOpts']['rpcAddress'] = '127.0.0.1'
+default['storj']['renter']['config']['opts']['networkOpts']['doNotTraverseNat'] = true
+default['storj']['renter']['config']['opts']['networkOpts']['tunnelServerPort'] = 4000
+default['storj']['renter']['config']['opts']['networkOpts']['tunnelGatewayRange']['min'] = 0
+default['storj']['renter']['config']['opts']['networkOpts']['tunnelGatewayRange']['max'] = 0
+default['storj']['renter']['config']['opts']['networkOpts']['maxTunnels'] = 0
+default['storj']['renter']['config']['opts']['networkOpts']['seedList'] = []
+default['storj']['renter']['config']['opts']['networkOpts']['bridgeUri'] = nil
+default['storj']['renter']['config']['opts']['networkOpts']['maxConnections'] = 250

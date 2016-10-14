@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var storj = require('storj');
+var storj = require('storj-lib');
 var fs = require('fs');
 
 var key = storj.KeyPair().getPrivateKey();

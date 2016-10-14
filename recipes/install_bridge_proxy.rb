@@ -11,7 +11,8 @@ nginx_site 'bridge-proxy-http' do
   template 'bridge-proxy-http.erb'
   variables ({
     :url => node['storj']['bridge']['url'],
-    :upstream_hosts => node['storj']['bridge']['upstream_hosts']
+    :upstream_hosts => node['storj']['bridge']['upstream_hosts'],
+    :upstream_tunnel_hosts => node['storj']['bridge']['upstream_tunnel_hosts']
   })
   notifies :reload, 'service[nginx]', :immediately
 end
@@ -32,7 +33,8 @@ nginx_site 'bridge-proxy-https' do
   template 'bridge-proxy-https.erb'
   variables ({
     :url => node['storj']['bridge']['url'],
-    :upstream_hosts => node['storj']['bridge']['upstream_hosts']
+    :upstream_hosts => node['storj']['bridge']['upstream_hosts'],
+    :upstream_tunnel_hosts => node['storj']['bridge']['upstream_tunnel_hosts']
   })
   action :nothing
   notifies :reload, 'service[nginx]', :immediately

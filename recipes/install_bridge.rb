@@ -1,22 +1,6 @@
-include_recipe 'nvm'
+include_recipe 'storj::install_deps'
 
-nvm_install 'v4.4.4' do
-  user_install true
-  user node['storj']['bridge']['user']
-  user_home node['storj']['bridge']['home']
-  from_source false
-  alias_as_default true
-  action :create
-end
-
-directory File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir']) do
-  recursive true
-  owner node['storj']['bridge']['user']
-  group node['storj']['bridge']['group']
-  action :create
-end
-
-directory File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir'], 'config') do
+directory File.join(node['storj']['bridge']['config-dir']) do
   recursive true
   owner node['storj']['bridge']['user']
   group node['storj']['bridge']['group']
@@ -42,16 +26,21 @@ template '/etc/init/bridge.conf' do
   action :create
 end
 
-template File.join(node['storj']['bridge']['home'], node['storj']['bridge']['config-dir'], 'config', node['storj']['bridge']['node-env']) do
+template File.join(node['storj']['bridge']['config-dir'], 'config', node['storj']['bridge']['node-env']) do
   source 'bridge-config.erb'
   variables({
-    :messaging => node['storj']['bridge']['messaging'],
-    :server_host => node['storj']['bridge']['server-host'],
-    :server_port => node['storj']['bridge']['server-port'],
-    :server_ssl_cert => node['storj']['bridge']['server-ssl-cert'],
-    :server_timeout => node['storj']['bridge']['server-timeout'],
+    :application_mirrors => node['storj']['bridge']['application']['mirrors'],
+    :application_privatekey => node['storj']['bridge']['application']['privatekey'],
+    :server_host => node['storj']['bridge']['server']['host'],
+    :server_port => node['storj']['bridge']['server']['port'],
+    :server_ssl_cert => node['storj']['bridge']['server']['ssl-cert'],
+    :server_timeout => node['storj']['bridge']['server']['timeout'],
+    :server_public_host => node['storj']['bridge']['server']['public']['host'],
+    :server_public_port => node['storj']['bridge']['server']['public']['port'],
     :storage => node['storj']['bridge']['storage'],
-    :network_minions => node['storj']['bridge']['network']['minions'],
+    :complex_rpcurl => node['storj']['bridge']['complex']['rpcUrl'],
+    :complex_rpcuser => node['storj']['bridge']['complex']['rpcUser'],
+    :complex_rpcpassword => node['storj']['bridge']['complex']['rpcPassword'],
     :mailer_host => node['storj']['bridge']['mailer']['host'],
     :mailer_port => node['storj']['bridge']['mailer']['port'],
     :mailer_auth_user => node['storj']['bridge']['mailer']['auth']['user'],
