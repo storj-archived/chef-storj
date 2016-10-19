@@ -16,7 +16,7 @@ env LOG_LEVEL=<%= @log_level %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node bin/storj-bridge.js >> /var/log/storj/bridge.log 2>&1'
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node bin/storj-bridge.js >> /var/log/storj/<%= @name %>.log 2>&1'
 end script
 
 start on startup

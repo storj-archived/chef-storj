@@ -1,6 +1,9 @@
 default['rabbitmq']['default_user'] = 'storjuser'
 default['rabbitmq']['default_pass'] = 'storjguest'
-default['rabbitmq']['version'] = '3.6.2'
+override['rabbitmq']['version'] = '3.6.5'
+override['rabbitmq']['deb_package'] = "rabbitmq-server_#{node['rabbitmq']['version']}-1_all.deb"
+override['rabbitmq']['deb_package_url'] = "https://www.rabbitmq.com/releases/rabbitmq-server/v#{node['rabbitmq']['version']}/"
+
 default['rabbitmq']['enabled_plugins'] = [
   'rabbitmq_management'
 ]

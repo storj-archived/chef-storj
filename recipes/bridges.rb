@@ -1,5 +1,6 @@
 include_recipe "storj"
 include_recipe 'storj::install_bridge'
+include_recipe 'storj::configure_bridges'
 
 include_recipe 'logrotate'
 

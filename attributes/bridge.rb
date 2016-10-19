@@ -13,13 +13,19 @@ default['storj']['bridge']['log-level'] = 2
 default['storj']['bridge']['url'] = 'api.storj.io'
 
 # These are the defaults for creating a Bridge API node
-default['storj']['bridge']['server']['host'] = node['storj']['bridge']['url']
-default['storj']['bridge']['server']['port'] = 8080
-default['storj']['bridge']['server']['timeout'] = 120000
-default['storj']['bridge']['server']['ssl-cert'] = true
-default['storj']['bridge']['server']['public']['host'] = '127.0.0.1'
-default['storj']['bridge']['server']['public']['port'] = 8080
-default['storj']['bridge']['storage']['db1'] = {
+default['storj']['bridge']['config']['application']['mirrors'] = 6
+
+# This should be generated or overridden
+default['storj']['bridge']['config']['application']['privateKey'] = nil
+# Host and Port to bind to locally
+default['storj']['bridge']['config']['server']['host'] = "0.0.0.0"
+default['storj']['bridge']['config']['server']['port'] = 8080
+default['storj']['bridge']['config']['server']['timeout'] = 120000
+default['storj']['bridge']['config']['server']['ssl']['cert'] = true
+# Host and Port through which the api service is publicly reachable
+default['storj']['bridge']['config']['server']['public']['host'] = 'api.storj.io'
+default['storj']['bridge']['config']['server']['public']['port'] = 443
+default['storj']['bridge']['config']['storage'] = [
   "name" => "bridge",
   "host" => "localhost",
   "port" => 27017,
@@ -31,13 +37,13 @@ default['storj']['bridge']['storage']['db1'] = {
     "ssl" => false,
     "sslValidate" => false
   }
-}
-default['storj']['bridge']['complex']['rpcUrl'] = 'http://localhost:8081'
-default['storj']['bridge']['complex']['rpcUser'] = 'storj_user'
-default['storj']['bridge']['complex']['rpcPassword'] = 'thisshouldbeareallyawesomeandhardtoguesspassword'
-default['storj']['bridge']['mailer']['host'] = 'localhost'
-default['storj']['bridge']['mailer']['port'] = 465
-default['storj']['bridge']['mailer']['auth']['user'] = nil
-default['storj']['bridge']['mailer']['auth']['pass'] = nil
-default['storj']['bridge']['mailer']['secure'] = true
-default['storj']['bridge']['mailer']['from'] = 'mailer@storj.io'
+]
+default['storj']['bridge']['config']['complex']['rpcUrl'] = 'http://localhost:8081'
+default['storj']['bridge']['config']['complex']['rpcUser'] = 'storj_user'
+default['storj']['bridge']['config']['complex']['rpcPassword'] = 'thisshouldbeareallyawesomeandhardtoguesspassword'
+default['storj']['bridge']['config']['mailer']['host'] = 'localhost'
+default['storj']['bridge']['config']['mailer']['port'] = 465
+default['storj']['bridge']['config']['mailer']['auth']['user'] = nil
+default['storj']['bridge']['config']['mailer']['auth']['pass'] = nil
+default['storj']['bridge']['config']['mailer']['secure'] = true
+default['storj']['bridge']['config']['mailer']['from'] = 'mailer@storj.io'
