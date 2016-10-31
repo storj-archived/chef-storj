@@ -207,6 +207,13 @@ rs.initiate(
 ```
 
 
+To Do
+=====
+
++ Automate the setup and configuration of MongoDB replica set and Sharding
++ Automate the creation of self signed keys for MongoDB
+
+
 License and Author
 ==================
 
