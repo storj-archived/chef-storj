@@ -1,4 +1,5 @@
-bridges = node['storj']['bridge']['instances']
+default_bridge['default'] = node['storj']['bridge']['config']
+bridges = node['storj']['bridge']['instances'] || default_bridge
 
 bridges.each do |name, bridge|
   instance_name = 'bridge-' + name

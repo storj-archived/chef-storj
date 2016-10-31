@@ -1,13 +1,13 @@
 default['storj']['share']['user'] = 'storj'
 default['storj']['share']['group'] = 'storj'
 default['storj']['share']['home'] = node['storj']['home']
-default['storj']['share']['version'] = 'v7.0.0'
+default['storj']['share']['version'] = 'v7.0.2'
 default['storj']['share']['app_dir'] = "#{node['storj']['share']['home']}/share"
 default['storj']['share']['log_dir'] = '/var/log/storj'
 default['storj']['share']['log_file'] = 'share.log'
 default['storj']['share']['repo'] = 'https://github.com/Storj/storjshare-cli.git'
 default['storj']['share']['node_env'] = 'production'
-default['storj']['share']['revision'] = 'v4.0.3'
+default['storj']['share']['revision'] = 'v7.0.2'
 default['storj']['share']['node_index'] = 'bin/storjshare.js'
 default['storj']['share']['password'] = nil
 default['storj']['share']['data_dir'] = '.storjshare'

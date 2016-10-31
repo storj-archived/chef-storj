@@ -9,6 +9,8 @@ include_recipe "storj"
 # We use server pem on the mongod instance for key and client as the ca, then reverse for
 # any clients including mongos and config servers
 #
+# Must add all hosts to the hosts file
+#
 # Connect to the mongod node with...
 # mongo bridge-db-1:27017/test --ssl --sslAllowInvalidCertificates --sslCAFile /etc/mongodb/keys/mongodb-server.pem --sslPEMKeyFile /etc/mongodb/keys/mongodb-client.pem
 #

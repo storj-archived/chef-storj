@@ -35,11 +35,6 @@ git node['storj']['share']['app_dir'] do
   notifies :run, 'bash[install_share]', :immediately
 end
 
-# Create the service for StorjShare
-service 'share' do
-  action :nothing
-end
-
 generate_key_script_path = File.join(node['storj']['share']['script_dir'], 'generate_storjshare_key.js')
 
 cookbook_file generate_key_script_path do
@@ -48,20 +43,6 @@ end
 
 if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa'))
   node.set['storj']['share']['password'] = SecureRandom.hex
-end
-
-bash 'generate_key' do
-  cwd "#{node['storj']['share']['app_dir']}"
-  user node['storj']['share']['user']
-  group node['storj']['share']['group']
-  environment Hash['HOME' => node['storj']['share']['home']]
-  code <<-EOH
-    source #{File.join(node['storj']['share']['home'], '.nvm/nvm.sh')}
-    PASSWORD=#{node['storj']['share']['password']} NODE_PATH=#{File.join(node['storj']['share']['app_dir'], 'node_modules')} node #{generate_key_script_path}
-  EOH
-  not_if { File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa')) }
-  notifies :restart, 'service[share]'
-  action :run
 end
 
 template '/etc/init/share.conf' do
@@ -79,7 +60,25 @@ template '/etc/init/share.conf' do
   notifies :restart, 'service[share]'
   action :create
 end
-    #:share_pw => node['storj']['share']['password'],
+
+# Create the service for StorjShare
+service 'share' do
+  action :nothing
+end
+
+bash 'generate_key' do
+  cwd "#{node['storj']['share']['app_dir']}"
+  user node['storj']['share']['user']
+  group node['storj']['share']['group']
+  environment Hash['HOME' => node['storj']['share']['home']]
+  code <<-EOH
+    source #{File.join(node['storj']['share']['home'], '.nvm/nvm.sh')}
+    PASSWORD=#{node['storj']['share']['password']} NODE_PATH=#{File.join(node['storj']['share']['app_dir'], 'node_modules')} node #{generate_key_script_path}
+  EOH
+  not_if { File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa')) }
+  notifies :restart, 'service[share]'
+  action :run
+end
 
 if node['cloud_v2']
   public_ip_address = node['cloud_v2']['public_ipv4_addrs'][0]

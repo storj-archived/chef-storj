@@ -20,7 +20,12 @@ suites:
     attributes:
   - name: bridge
     run_list:
-      - recipe[storj::bridge]
+      - recipe[storj::bridges]
+      - recipe[storj::landlord]
+    attributes:
+  - name: renters
+    run_list:
+      - recipe[storj::renters]
     attributes:
   - name: bridge_proxy
     run_list:
