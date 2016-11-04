@@ -37,7 +37,7 @@ apt_repository "mongodb" do
 end
 
 apt_package "mongodb-org" do
-  version "3.2.6"
+  version "3.2.10"
   action :install
 end
 

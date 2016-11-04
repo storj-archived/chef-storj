@@ -1,13 +1,23 @@
 renters = node['storj']['renter']['instances']
-network_privatekey_path = node['storj']['renter']['config']['opts']['networkPrivateKey']
+migration_privatekey_path = node['storj']['renter']['config']['opts']['migrationPrivateKey']
+network_private_extendedkey_path = node['storj']['renter']['config']['opts']['networkPrivateExtendedKey']
 
 renters.each do |name, renter|
   instance_name = 'renter-' + name
   renter_config_file = File.join(node['storj']['complex']['config-dir'], instance_name + '.json')
 
-  if renter['networkPrivateKey'] then
-    file network_privatekey_path do
-      content renter['networkPrivateKey']
+  if renter['migrationPrivateKey'] && migration_privatekey_path then
+    file migration_privatekey_path do
+      content renter['migrationPrivateKeyString']
+      mode '0600'
+      owner node['storj']['complex']['user']
+      group node['storj']['complex']['group']
+    end
+  end
+
+  if renter['networkPrivateExtendedKey'] && network_private_extendedkey_path then
+    file network_private_extendedkey_path do
+      content renter['networkPrivateExtendedKeyString']
       mode '0600'
       owner node['storj']['complex']['user']
       group node['storj']['complex']['group']
