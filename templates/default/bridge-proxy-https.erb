@@ -4,7 +4,6 @@ upstream api_servers_http_ssl {
 <% @upstream_hosts.each do |host| %>
   server <%= host %>;
 <% end %>
-  keepalive 64;
 }
 
 # HTTPS server
@@ -36,8 +35,5 @@ server {
                 proxy_next_upstream non_idempotent;
                 proxy_http_version 1.1;
                 proxy_set_header Connection "";
-                #proxy_connect_timeout 600s;
-                #proxy_send_timeout 120s;
-                #proxy_read_timeout 600s;
         }
 }
