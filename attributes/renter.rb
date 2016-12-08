@@ -20,3 +20,5 @@ default['storj']['renter']['config']['opts']['networkOpts']['maxTunnels'] = 3
 default['storj']['renter']['config']['opts']['networkOpts']['seedList'] = []
 default['storj']['renter']['config']['opts']['networkOpts']['bridgeUri'] = "https://api.storj.io"
 default['storj']['renter']['config']['opts']['networkOpts']['maxConnections'] = 250
+default['storj']['renter']['config']['opts']['totalRenters'] = 1
+default['storj']['renter']['config']['opts']['renterOverlap'] = 3

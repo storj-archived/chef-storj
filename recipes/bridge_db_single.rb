@@ -25,7 +25,7 @@ include_recipe "storj"
 # Add the mongod to as a shard to the mongos instance
 # mongos> sh.addShard("bridge-staging-1/bridge-db-1:27017")
 
-node.set['mongodb']['version'] = "3.2.6"
+node.set['mongodb']['version'] = "3.2.10"
 node.set['mongodb']['server_pem'] = "/etc/mongodb/keys/mongodb-server.pem"
 node.set['mongodb']['client_pem'] = "/etc/mongodb/keys/mongodb-client.pem"
 node.set['mongodb']['bind_ips'] = "#{node['ipaddress']},127.0.0.1"
@@ -42,7 +42,27 @@ apt_repository "mongodb" do
 end
 
 apt_package "mongodb-org" do
-  version "3.2.6"
+  version "3.2.11"
+  action :install
+end
+
+apt-package "mongodb-org-mongos" do
+  version "3.2.11"
+  action :install
+end
+
+apt-package "mongodb-org-server" do
+  version "3.2.11"
+  action :install
+end
+
+apt-package "mongodb-org-shell" do
+  version "3.2.11"
+  action :install
+end
+
+apt-package "mongodb-org-tools" do
+  version "3.2.11"
   action :install
 end
 

@@ -1,6 +1,6 @@
-include_recipe 'letsencrypt'
+include_recipe 'acme'
 
-letsencrypt_certificate node['bridge']['url'] do
+acme_certificate node['bridge']['url'] do
   fullchain "/etc/ssl/certs/#{node['bridge']['url']}.crt"
   key      "/etc/ssl/private/#{node['bridge']['url']}.key"
   method   'http'

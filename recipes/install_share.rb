@@ -2,7 +2,7 @@ require 'securerandom'
 
 include_recipe 'nvm'
 
-nvm_install 'v4.4.4' do
+nvm_install 'v6.9.1' do
   user_install true
   user node['storj']['share']['user']
   user_home node['storj']['share']['home']
@@ -50,6 +50,7 @@ template '/etc/init/share.conf' do
     :user => node['storj']['share']['user'],
     :group => node['storj']['share']['group'],
     :storj_network => node['storj']['share']['network_name'],
+    :storj_bridge => node['storj']['share']['storj_bridge'],
     :app_dir => node['storj']['share']['app_dir'],
     :log_path => File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file']),
     :node_env => node['storj']['share']['node_env'],

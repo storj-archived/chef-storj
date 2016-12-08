@@ -30,9 +30,9 @@ nginx_site 'bridge-proxy-http' do
 end
 
 # Generate SSL certs for bridge proxy
-include_recipe 'letsencrypt'
+include_recipe 'acme'
 
-letsencrypt_certificate node['storj']['bridge']['url'] do
+acme_certificate node['storj']['bridge']['url'] do
   fullchain "/etc/ssl/certs/#{node['storj']['bridge']['url']}.crt"
   key      "/etc/ssl/private/#{node['storj']['bridge']['url']}.key"
   method   'http'

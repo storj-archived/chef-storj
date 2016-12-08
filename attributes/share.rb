@@ -16,6 +16,7 @@ default['storj']['share']['key_file'] = 'id_ecdsa'
 default['storj']['share']['loglevel'] = 2
 default['storj']['share']['concurrency'] = 3
 default['storj']['share']['payment_address'] = '12sudHQtCt8Wp9X7V9U69CjzG6SFCKvgEZ'
+default['storj']['share']['storj_bridge'] = 'https://api.storj.io'
 default['storj']['share']['storage']['size'] = 10
 default['storj']['share']['storage']['unit'] = 'GB'
 default['storj']['share']['network']['port'] = 4000
