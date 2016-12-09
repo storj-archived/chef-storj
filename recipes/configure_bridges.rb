@@ -3,8 +3,8 @@ bridges = node['storj']['bridge']['instances'] || default_bridge
 
 bridges.each do |name, bridge|
   instance_name = 'bridge-' + name
-  node_env = "#{node['storj']['bridge']['node-env']}-#{name}"
-  bridge_config_file = File.join(node['storj']['bridge']['config-dir'], 'config', node_env)
+  node_env = node['storj']['bridge']['node-env']
+  config_path = File.join(node['storj']['bridge']['config-dir'], instance_name)
 
   template "/etc/init/#{instance_name}.conf" do
     source "bridge.conf.erb"
@@ -14,6 +14,7 @@ bridges.each do |name, bridge|
       :group => node['storj']['bridge']['group'],
       :app_dir => node['storj']['bridge']['app-dir'],
       :node_env => node_env,
+      :config_path => config_path,
       :storj_network => node['storj']['bridge']['storj-network'],
       :log_level => node['storj']['bridge']['log-level'],
       :home => node['storj']['bridge']['home']
@@ -40,7 +41,7 @@ bridges.each do |name, bridge|
 
   merged_config = deep_merge(config_defaults, instance_config)
 
-  template bridge_config_file do
+  template config_path do
     source 'bridge-config.erb'
     variables({
       :config => merged_config
@@ -52,6 +53,6 @@ bridges.each do |name, bridge|
   service instance_name do
     action :nothing
     subscribes :restart, "bash[install_bridge]"
-    subscribes :restart, "template[#{bridge_config_file}]"
+    subscribes :restart, "template[#{config_path}]"
   end
 end
