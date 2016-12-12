@@ -23,8 +23,7 @@ nginx_site 'bridge-proxy-http' do
   template 'bridge-proxy-http.erb'
   variables ({
     :url => node['storj']['bridge']['url'],
-    :upstream_hosts => node['storj']['bridge']['upstream_hosts'],
-    :upstream_tunnel_hosts => node['storj']['bridge']['upstream_tunnel_hosts']
+    :upstream_hosts => node['storj']['bridge']['upstream_hosts']
   })
   notifies :reload, 'service[nginx]', :immediately
 end
@@ -37,11 +36,10 @@ acme_certificate node['storj']['bridge']['url'] do
   key      "/etc/ssl/private/#{node['storj']['bridge']['url']}.key"
   method   'http'
   wwwroot  '/tmp/letsencrypt-auto'
-  notifies :create, "letsencrypt_certificate[#{node['storj']['bridge']['url']}]", :immediately
 end
 
-# Once letxencrypt is successful, add nginx bridge proxy config
-nginx_site 'bridge-proxy-https' do
+# Once letsencrypt is successful, add nginx bridge proxy config
+nginx_site 'bridge_proxy_https' do
   template 'bridge-proxy-https.erb'
   variables ({
     :url => node['storj']['bridge']['url'],
@@ -50,5 +48,5 @@ nginx_site 'bridge-proxy-https' do
   })
   action :nothing
   notifies :reload, 'service[nginx]', :immediately
+  subscribes :create, "acme_certificate[#{node['storj']['bridge']['url']}]", :immediately
 end
-
