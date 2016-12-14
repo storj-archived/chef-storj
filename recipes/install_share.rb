@@ -2,7 +2,7 @@ require 'securerandom'
 
 include_recipe 'nvm'
 
-nvm_install 'v6.9.1' do
+nvm_install node['storj']['nodejs']['version'] do
   user_install true
   user node['storj']['share']['user']
   user_home node['storj']['share']['home']
@@ -41,25 +41,46 @@ cookbook_file generate_key_script_path do
   action :create
 end
 
+# Need to catch the case where the node attribute doesnt exist but the keyfile exists
 if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['storj']['share']['data_path'], 'id_ecdsa'))
   node.set['storj']['share']['password'] = SecureRandom.hex
 end
 
-template '/etc/init/share.conf' do
-  variables ({
-    :user => node['storj']['share']['user'],
-    :group => node['storj']['share']['group'],
-    :storj_network => node['storj']['share']['network_name'],
-    :storj_bridge => node['storj']['share']['storj_bridge'],
-    :app_dir => node['storj']['share']['app_dir'],
-    :log_path => File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file']),
-    :node_env => node['storj']['share']['node_env'],
-    :node_index => node['storj']['share']['node_index'],
-    :share_pw => node['storj']['share']['password'],
-    :home => node['storj']['share']['home']
-  })
-  notifies :restart, 'service[share]'
-  action :create
+if node['storj']['share']['init_style'] == 'systemd'
+  template '/etc/systemd/system/share.service' do
+    source 'share.systemd.erb'
+    variables ({
+      :user => node['storj']['share']['user'],
+      :group => node['storj']['share']['group'],
+      :storj_network => node['storj']['share']['network_name'],
+      :storj_bridge => node['storj']['share']['storj_bridge'],
+      :app_dir => node['storj']['share']['app_dir'],
+      :log_path => File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file']),
+      :node_env => node['storj']['share']['node_env'],
+      :node_index => node['storj']['share']['node_index'],
+      :share_pw => node['storj']['share']['password'],
+      :home => node['storj']['share']['home']
+    })
+    notifies :restart, 'service[share]'
+    action :create
+  end
+else
+  template '/etc/init/share.conf' do
+    variables ({
+      :user => node['storj']['share']['user'],
+      :group => node['storj']['share']['group'],
+      :storj_network => node['storj']['share']['network_name'],
+      :storj_bridge => node['storj']['share']['storj_bridge'],
+      :app_dir => node['storj']['share']['app_dir'],
+      :log_path => File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file']),
+      :node_env => node['storj']['share']['node_env'],
+      :node_index => node['storj']['share']['node_index'],
+      :share_pw => node['storj']['share']['password'],
+      :home => node['storj']['share']['home']
+    })
+    notifies :restart, 'service[share]'
+    action :create
+  end
 end
 
 # Create the service for StorjShare
