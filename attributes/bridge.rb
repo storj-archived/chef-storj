@@ -14,6 +14,7 @@ default['storj']['bridge']['url'] = 'api.storj.io'
 
 # This should be generated or overridden
 default['storj']['bridge']['config']['application']['privateKey'] = nil
+default['storj']['bridge']['config']['application']['farmerTimeoutIgnore'] = '10m'
 
 # Host and Port to bind to locally
 default['storj']['bridge']['config']['server']['host'] = "0.0.0.0"
