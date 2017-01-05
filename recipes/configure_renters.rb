@@ -2,6 +2,7 @@ require 'digest/sha1'
 
 migration_privatekey_path = node['storj']['renter']['config']['opts']['migrationPrivateKey']
 network_private_extendedkey_path = node['storj']['renter']['config']['opts']['networkPrivateExtendedKey']
+init_style = node['storj']['renter']['init_style'] || node['storj']['init_style']
 
 mac_address = node['macaddress']
 index_base = Digest::SHA1.hexdigest(mac_address).to_s[0,6].hex
@@ -43,7 +44,8 @@ renters = node['storj']['renter']['instances']
 
 renters.each do |name, renter|
   instance_name = 'renter-' + name
-  renter_config_file = File.join(node['storj']['complex']['config-dir'], instance_name + '.json')
+  log_path = File.join(node['storj']['renter']['log-dir'], instance_name + '.log')
+  renter_config_path = File.join(node['storj']['complex']['config-dir'], instance_name + '.json')
 
   if migrationPrivateKeyString && migration_privatekey_path then
     file migration_privatekey_path do
@@ -63,21 +65,40 @@ renters.each do |name, renter|
     end
   end
 
-  template "/etc/init/#{instance_name}.conf" do
-    source 'complex.conf.erb'
-    variables ({
-      :name => instance_name,
-      :user => node['storj']['complex']['user'],
-      :group => node['storj']['complex']['group'],
-      :app_dir => node['storj']['complex']['app-dir'],
-      :node_env => node['storj']['complex']['node-env'],
-      :home => node['storj']['complex']['home'],
-      :log_level => node['storj']['renter']['log-level'],
-      :log_dir => node['storj']['renter']['log-dir'],
-      :storj_network => node['storj']['bridge']['storj-network'],
-      :config_file => File.join(node['storj']['complex']['config-dir'], instance_name + '.json')
-    })
-    action :create
+  if init_style == 'systemd'
+    template "/etc/systemd/system/#{instance_name}.service" do
+      source 'complex.systemd.erb'
+      variables ({
+        :name => instance_name,
+        :user => node['storj']['complex']['user'],
+        :group => node['storj']['complex']['group'],
+        :app_dir => node['storj']['complex']['app-dir'],
+        :node_env => node['storj']['complex']['node-env'],
+        :home => node['storj']['complex']['home'],
+        :log_path => log_path,
+        :log_level => node['storj']['renter']['config']['opts']['logLevel'],
+        :storj_network => node['storj']['bridge']['storj-network'],
+        :config_path => renter_config_path
+      })
+      action :create
+    end
+  else
+    template "/etc/init/#{instance_name}.conf" do
+      source 'complex.conf.erb'
+      variables ({
+        :name => instance_name,
+        :user => node['storj']['complex']['user'],
+        :group => node['storj']['complex']['group'],
+        :app_dir => node['storj']['complex']['app-dir'],
+        :node_env => node['storj']['complex']['node-env'],
+        :home => node['storj']['complex']['home'],
+        :log_level => node['storj']['renter']['log-level'],
+        :log_dir => node['storj']['renter']['log-dir'],
+        :storj_network => node['storj']['bridge']['storj-network'],
+        :config_file => File.join(node['storj']['complex']['config-dir'], instance_name + '.json')
+      })
+      action :create
+    end
   end
 
   config_defaults = node['storj']['renter']['config'].to_hash
@@ -99,7 +120,7 @@ renters.each do |name, renter|
 
   merged_config = deep_merge(config_defaults, instance_config)
 
-  template renter_config_file do
+  template renter_config_path do
     source 'complex-config.erb'
     variables({
       :config => merged_config
@@ -110,6 +131,6 @@ renters.each do |name, renter|
   service instance_name do
     action :nothing
     subscribes :restart, 'bash[install_complex]'
-    subscribes :restart, "template[#{renter_config_file}]"
+    subscribes :restart, "template[#{renter_config_path}]"
   end
 end

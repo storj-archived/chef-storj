@@ -16,7 +16,7 @@ env STORJ_NETWORK=<%= @storj_network %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node bin/storj-complex.js -c <%= @config_file %> >> <%= File.join(@log_dir, @name + '.log') %> 2>&1'
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node bin/storj-complex.js -c <%= @config_path %> >> <%= File.join(@log_dir, @name + '.log') %> 2>&1'
 end script
 
 start on startup

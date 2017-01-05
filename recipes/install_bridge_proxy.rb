@@ -18,6 +18,14 @@ node.override['nginx']['source']['checksum'] = '8ed647c3dd65bc4ced03b0e0f6bf9e63
 
 include_recipe 'nginx::source'
 
+file '/etc/nginx/sites-enabled/bridge_proxy_https' do
+  action :delete
+end
+
+file '/etc/nginx/sites-available/bridge_proxy_https' do
+  action :delete
+end
+
 # Install nginx letsencrypt config and start nginx
 nginx_site 'bridge-proxy-http' do
   template 'bridge-proxy-http.erb'
@@ -39,7 +47,7 @@ acme_certificate node['storj']['bridge']['url'] do
 end
 
 # Once letsencrypt is successful, add nginx bridge proxy config
-nginx_site 'bridge_proxy_https' do
+nginx_site 'bridge-proxy-https' do
   template 'bridge-proxy-https.erb'
   variables ({
     :url => node['storj']['bridge']['url'],

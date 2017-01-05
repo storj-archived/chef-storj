@@ -46,7 +46,9 @@ if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['stor
   node.set['storj']['share']['password'] = SecureRandom.hex
 end
 
-if node['storj']['share']['init_style'] == 'systemd'
+init_style = node['storj']['share']['init_style'] || node['storj']['init_style']
+
+if init_style == 'systemd'
   template '/etc/systemd/system/share.service' do
     source 'share.systemd.erb'
     variables ({
