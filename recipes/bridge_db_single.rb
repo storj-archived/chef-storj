@@ -25,7 +25,7 @@ include_recipe "storj"
 # Add the mongod to as a shard to the mongos instance
 # mongos> sh.addShard("bridge-staging-1/bridge-db-1:27017")
 
-node.set['mongodb']['version'] = "3.2.10"
+node.set['mongodb']['version'] = "3.2.11"
 node.set['mongodb']['server_pem'] = "/etc/mongodb/keys/mongodb-server.pem"
 node.set['mongodb']['client_pem'] = "/etc/mongodb/keys/mongodb-client.pem"
 node.set['mongodb']['bind_ips'] = "#{node['ipaddress']},127.0.0.1"
@@ -42,27 +42,27 @@ apt_repository "mongodb" do
 end
 
 apt_package "mongodb-org" do
-  version "3.2.11"
+  version node['mongodb']['version']
   action :install
 end
 
 apt-package "mongodb-org-mongos" do
-  version "3.2.11"
+  version node['mongodb']['version']
   action :install
 end
 
 apt-package "mongodb-org-server" do
-  version "3.2.11"
+  version node['mongodb']['version']
   action :install
 end
 
 apt-package "mongodb-org-shell" do
-  version "3.2.11"
+  version node['mongodb']['version']
   action :install
 end
 
 apt-package "mongodb-org-tools" do
-  version "3.2.11"
+  version node['mongodb']['version']
   action :install
 end
 
@@ -191,7 +191,8 @@ template "/etc/init/mongod-1.conf" do
     :mode => 'mongod',
     :daemon => 'mongod',
     :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :ca_file => node['mongodb']['client_pem'],
+    :security_auth_enabled => node['storj']['bridge']['db']['mongod']['security']['auth_enabled']
   })
 end
 
@@ -203,7 +204,8 @@ template "/etc/init/mongod-2.conf" do
     :mode => 'mongod',
     :daemon => 'mongod',
     :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :ca_file => node['mongodb']['client_pem'],
+    :security_auth_enabled => node['storj']['bridge']['db']['mongod']['security']['auth_enabled']
   })
 end
 template "/etc/init/mongod-3.conf" do
@@ -214,7 +216,8 @@ template "/etc/init/mongod-3.conf" do
     :mode => 'mongod',
     :daemon => 'mongod',
     :key_file => node['mongodb']['server_pem'],
-    :ca_file => node['mongodb']['client_pem']
+    :ca_file => node['mongodb']['client_pem'],
+    :security_auth_enabled => node['storj']['bridge']['db']['mongod']['security']['auth_enabled']
   })
 end
 

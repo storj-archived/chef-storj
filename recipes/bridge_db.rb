@@ -15,6 +15,8 @@ include_recipe "storj"
 # Use 27020 (mongos) to create user on bridge db
 # db.createUser({ user: "storj", pwd: "pw_goes_here", roles: [ { role: "readWrite", "db": "bridge" } ] })
 #
+# Ensure mongodb auth is enabled at this point otherwise auth does nothing
+#
 # Update hostname on initial host in replica set
 # mongod> cfg = rs.conf()
 # mongod> cfg.members[0].host = "bridge-db-1:27017"
@@ -72,7 +74,9 @@ template "/etc/mongodb/mongod" do
     :oplogSizeMB => node['storj']['bridge']['db']['mongod']['oplog_size'],
     :key_file => node['storj']['bridge']['db']['mongod']['server_pem'],
     :enable_ca => node['storj']['bridge']['db']['mongod']['enable_ca'],
-    :ca_file => node['storj']['bridge']['db']['mongod']['client_pem']
+    :ca_file => node['storj']['bridge']['db']['mongod']['client_pem'],
+    :security_enabled => node['storj']['bridge']['db']['mongod']['security']['enabled'],
+    :security_keyfile => node['storj']['bridge']['db']['mongod']['security']['keyFile']
   })
 end
 
@@ -87,7 +91,9 @@ template "/etc/mongodb/mongoc" do
     :oplogSizeMB => node['storj']['bridge']['db']['mongoc']['oplog_size'],
     :key_file => node['storj']['bridge']['db']['mongoc']['client_pem'],
     :enable_ca => node['storj']['bridge']['db']['mongoc']['enable_ca'],
-    :ca_file => node['storj']['bridge']['db']['mongoc']['server_pem']
+    :ca_file => node['storj']['bridge']['db']['mongoc']['server_pem'],
+    :security_enabled => node['storj']['bridge']['db']['mongod']['security']['enabled'],
+    :security_keyfile => node['storj']['bridge']['db']['mongod']['security']['keyFile']
   })
 end
 
@@ -99,7 +105,9 @@ template "/etc/mongodb/mongos" do
     :listenPort => node['storj']['bridge']['db']['mongos']['listen_port'],
     :key_file => node['storj']['bridge']['db']['mongos']['server_pem'],
     :enable_ca => node['storj']['bridge']['db']['mongos']['enable_ca'],
-    :ca_file => node['storj']['bridge']['db']['mongos']['client_pem']
+    :ca_file => node['storj']['bridge']['db']['mongos']['client_pem'],
+    :security_enabled => node['storj']['bridge']['db']['mongod']['security']['enabled'],
+    :security_keyfile => node['storj']['bridge']['db']['mongod']['security']['keyFile']
   })
 end
 
@@ -108,10 +116,7 @@ template "/etc/init/mongod.conf" do
   variables ({
     :config => '/etc/mongodb/mongod',
     :instance => 'mongod',
-    :mode => 'mongod',
     :daemon => 'mongod',
-    :key_file => node['storj']['bridge']['db']['mongod']['server_pem'],
-    :ca_file => node['storj']['bridge']['db']['mongod']['client_pem']
   })
 end
 
