@@ -214,6 +214,11 @@ To Do
 + Automate the creation of self signed keys for MongoDB
 
 
+Support Operating Systems
+=========================
+Currently this cookbook only supports Debian like OS's. When Chef enables better conditionals in metadata depends, we will update this to support more systems. PR's are always welcome also.
+
+
 License and Author
 ==================
 
