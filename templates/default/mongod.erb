@@ -48,5 +48,14 @@ replication:
 
 #snmp:
 
+<% if @security_enabled %>
 security:
-  authorization: disabled
+<% end %>
+<% if @security_keyfile %>
+  keyFile: <%= @security_keyfile %>
+<% end %>
+
+# Should loop through all parameters provided by chef here
+#setParameter:
+#  enableLocalhostAuthBypass: true
+

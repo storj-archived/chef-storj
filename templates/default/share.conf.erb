@@ -10,14 +10,10 @@ env HOME=<%= @home %>
 <% if @storj_network %>
 env STORJ_NETWORK=<%= @storj_network %>
 <% end %>
-<% if @storj_bridge %>
-env STORJ_BRIDGE=<%= @storj_bridge %>
-<% end %>
-env SHARE_PW=<%= @share_pw %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> -p $SHARE_PW start >> <%= @log_path %> 2>&1'
+    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec bin/storjshare.js start -c <%= @config_path %>'
 end script
 
 start on startup
