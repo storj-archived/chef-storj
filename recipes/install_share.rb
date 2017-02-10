@@ -55,18 +55,20 @@ if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['stor
 end
 
 init_style = node['storj']['share']['init_style'] || node['storj']['init_style']
+log_path = File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file'])
 
 if init_style == 'systemd'
   template '/etc/systemd/system/share.service' do
     source 'share.systemd.erb'
     variables ({
-      :user => node['storj']['share']['user'],
-      :group => node['storj']['share']['group'],
-      :storj_network => node['storj']['share']['network_name'],
       :app_dir => node['storj']['share']['app_dir'],
-      :node_env => node['storj']['share']['node_env'],
       :config_path => config_path,
-      :home => node['storj']['share']['home']
+      :group => node['storj']['share']['group'],
+      :home => node['storj']['share']['home'],
+      :log_path => log_path,
+      :node_env => node['storj']['share']['node_env'],
+      :storj_network => node['storj']['share']['network_name'],
+      :user => node['storj']['share']['user']
     })
     notifies :restart, 'service[share]'
     action :create
@@ -74,13 +76,14 @@ if init_style == 'systemd'
 else
   template '/etc/init/share.conf' do
     variables ({
-      :user => node['storj']['share']['user'],
-      :group => node['storj']['share']['group'],
-      :storj_network => node['storj']['share']['network_name'],
       :app_dir => node['storj']['share']['app_dir'],
-      :node_env => node['storj']['share']['node_env'],
       :config_path => config_path,
-      :home => node['storj']['share']['home']
+      :group => node['storj']['share']['group'],
+      :home => node['storj']['share']['home'],
+      :log_path => log_path,
+      :node_env => node['storj']['share']['node_env'],
+      :storj_network => node['storj']['share']['network_name'],
+      :user => node['storj']['share']['user']
     })
     notifies :restart, 'service[share]'
     action :create
@@ -120,7 +123,7 @@ end
 logger_output_file = File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file'])
 
 node.set['storj']['share']['config']['rpcAddress'] = public_ip_address
-node.set['storj']['share']['config']['LoggerOutputFile'] = logger_output_file
+node.set['storj']['share']['config']['loggerOutputFile'] = logger_output_file
 
 farmer_config = node['storj']['share']['config'].to_hash
 
