@@ -6,6 +6,8 @@ Group=<%= @user %>
 Restart=always
 KillMode=control-group
 Environment=HOME=<%= @home %>
+<% if @storj_network %>
 Environment=STORJ_NETWORK=<%= @storj_network %>
+<% end %>
 Environment=NODE_ENV=<%= @node_env %>
-ExecStart=/bin/bash -c "source <%= @home %>/.nvm/nvm.sh && cd <%= @app_dir %> && exec bin/storjshare.js start -c <%= @config_path %> --detached >> <%= @log_path %>"
+ExecStart=/bin/bash -c "source <%= @home %>/.nvm/nvm.sh && cd <%= @app_dir %> && exec bin/storjshare.js start -c <%= @config_path %> --detached<% if @log_path %> >> <%= @log_path %><% end %>"

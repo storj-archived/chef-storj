@@ -2,6 +2,16 @@ require 'securerandom'
 
 include_recipe 'nvm'
 
+share_data_path = node['storj']['share']['config']['storagePath']
+share_key_path = File.join(share_data_path, node['storj']['share']['key_file'])
+migration_share_data_path = node['storj']['share']['migration_data_path']
+migration_share_key_path = node['storj']['share']['migration_key_path']
+migration_share_password = node['storj']['share']['password']
+generate_key_script_path = File.join(node['storj']['share']['script_dir'], 'generate_storjshare_key.js')
+migrate_key_script_path = File.join(node['storj']['share']['script_dir'], 'migrate_storjshare_key.js')
+config_path = File.join(node['storj']['share']['config_dir'], node['storj']['share']['config_file_name'])
+
+
 nvm_install node['storj']['nodejs']['version'] do
   user_install true
   user node['storj']['share']['user']
@@ -25,6 +35,39 @@ directory node['storj']['share']['config_dir'] do
   action :create
 end
 
+cookbook_file generate_key_script_path do
+  action :create
+end
+
+cookbook_file migrate_key_script_path do
+  action :create
+end
+
+# If the node['storj']['share']['data_path'] attr exists on this node, rename the directory to the
+# new name. Moving away from dotfile folder for the storage path as to not obscure where things
+# are kept
+
+ruby_block "Migrate Share Data" do
+  block do
+    ::File.rename(migration_share_data_path, share_data_path)
+  end
+
+  only_if { migration_share_data_path && share_data_path && File.exists?(migration_share_data_path) && !File.exists?(share_data_path) }
+end
+
+bash 'migrate key' do
+  cwd "#{share_data_path}"
+  user node['storj']['share']['user']
+  group node['storj']['share']['user']
+  environment Hash['HOME' => node['storj']['share']['home']]
+  code <<-EOH
+    source #{File.join(node['storj']['share']['home'], '.nvm/nvm.sh')}
+    KEY_PATH=#{share_key_path} MIGRATION_KEY_PATH=#{migration_share_key_path} PASSWORD=#{migration_share_password} NODE_PATH=#{File.join(node['storj']['share']['app_dir'], 'node_modules')} node #{migrate_key_script_path}
+  EOH
+  only_if { migration_share_data_path && share_data_path && File.exists?(migration_share_key_path) && !File.exists?(share_key_path) }
+end
+
+# Create directory for our shared drive storage
 directory File.join(node['storj']['share']['config']['storagePath']) do
   owner node['storj']['share']['user']
   group node['storj']['share']['group']
@@ -42,17 +85,11 @@ git node['storj']['share']['app_dir'] do
   notifies :run, 'bash[install_share]', :immediately
 end
 
-generate_key_script_path = File.join(node['storj']['share']['script_dir'], 'generate_storjshare_key.js')
-config_path = File.join(node['storj']['share']['config_dir'], node['storj']['share']['config_file_name'])
-
-cookbook_file generate_key_script_path do
-  action :create
-end
-
+# This is unused now that we are not encrypting the private key
 # Need to catch the case where the node attribute doesnt exist but the keyfile exists
-if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['storj']['share']['config']['storagePath'], 'id_ecdsa'))
-  node.set['storj']['share']['password'] = SecureRandom.hex
-end
+#if node['storj']['share']['password'].nil? && !File.exists?(File.join(node['storj']['share']['config']['storagePath'], 'id_ecdsa'))
+#  node.set['storj']['share']['password'] = SecureRandom.hex
+#end
 
 init_style = node['storj']['share']['init_style'] || node['storj']['init_style']
 log_path = File.join(node['storj']['share']['log_dir'], node['storj']['share']['log_file'])
@@ -110,8 +147,8 @@ bash 'generate_key' do
   action :run
 end
 
-if File.exist?(File.join(node['storj']['share']['config']['storagePath'], 'priv_key'))
-  node.set['storj']['share']['config']['networkPrivateKey'] = ::File.read(File.join(node['storj']['share']['config']['storagePath'], 'priv_key')).chomp
+if File.exist?(share_key_path)
+  node.set['storj']['share']['config']['networkPrivateKey'] = ::File.read(share_key_path).chomp
 end
 
 if node['cloud_v2']

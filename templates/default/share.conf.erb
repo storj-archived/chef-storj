@@ -15,7 +15,7 @@ env STORJ_NETWORK=<%= @storj_network %>
 
 script
     chdir $APPDIR
-    exec bash -c "source $HOME/.nvm/nvm.sh && exec STORJ_NETWORK=<%= @storj_network %> bin/storjshare.js start -c $CONFIG_PATH --detached >> $LOG_PATH"
+    exec bash -c "source $HOME/.nvm/nvm.sh && exec STORJ_NETWORK=<%= @storj_network %> bin/storjshare.js start -c $CONFIG_PATH --detached<% if @log_path %> >> <%= @log_path %><% end %>"
 end script
 
 start on startup

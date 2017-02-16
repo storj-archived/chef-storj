@@ -10,6 +10,9 @@ default['storj']['share']['revision'] = 'v2.3.0'
 default['storj']['share']['config_dir'] = '/etc/storj'
 default['storj']['share']['config_file_name'] = 'share.json'
 default['storj']['share']['data_dir'] = 'data'
+default['storj']['share']['key_file'] = 'share.key'
+default['storj']['share']['migration_key_path'] = '/opt/storj/data/id_ecdsa'
+default['storj']['share']['migration_data_path'] = '/opt/storj/.storjshare'
 
 default['storj']['share']['config']['maxOfferConcurrency'] = 3
 default['storj']['share']['config']['paymentAddress'] = '12sudHQtCt8Wp9X7V9U69CjzG6SFCKvgEZ'
