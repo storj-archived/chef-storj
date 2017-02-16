@@ -49,3 +49,14 @@ sharding:
 #auditLog:
 
 #snmp:
+
+<% if @security_enabled %>
+security:
+<% end %>
+<% if @security_keyfile %>
+  keyFile: <%= @security_keyfile %>
+<% end %>
+
+# Should loop through all parameters provided by chef here
+#setParameter:
+#  enableLocalhostAuthBypass: true

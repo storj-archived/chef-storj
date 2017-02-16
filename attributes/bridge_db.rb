@@ -1,5 +1,7 @@
 default['mongodb']['version'] = '3.2.10'
 default['storj']['bridge']['db']['mongod']['replset_name'] = 'storj-bridge'
+default['storj']['bridge']['db']['mongod']['security']['keyFile'] = '/etc/mongodb/keys/keyfile'
+default['storj']['bridge']['db']['mongod']['security']['enabled'] = true
 default['storj']['bridge']['db']['mongod']['data_dir'] = '/data/mongodb/data'
 default['storj']['bridge']['db']['mongod']['listen_port'] = 27017
 default['storj']['bridge']['db']['mongod']['bind_ips'] = "#{node['ipaddress']},127.0.0.1"

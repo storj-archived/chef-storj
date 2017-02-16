@@ -5,10 +5,9 @@ User=<%= @user %>
 Group=<%= @user %>
 Restart=always
 KillMode=control-group
-Environment=APPDIR=<%= @app_dir %>
-Environment=NODE_ENV=<%= @node_env %>
 Environment=HOME=<%= @home %>
+<% if @storj_network %>
 Environment=STORJ_NETWORK=<%= @storj_network %>
-Environment=STORJ_BRIDGE=<%= @storj_bridge %>
-Environment=STORJSHARE_PASSPHRASE=<%= @share_pw %>
-ExecStart=/bin/bash -c 'source <%= @home %>/.nvm/nvm.sh && cd $APPDIR && exec node <%= @node_index %> start >> <%= @log_path %> 2>&1'
+<% end %>
+Environment=NODE_ENV=<%= @node_env %>
+ExecStart=/bin/bash -c "source <%= @home %>/.nvm/nvm.sh && cd <%= @app_dir %> && exec bin/storjshare.js start -c <%= @config_path %> --detached<% if @log_path %> >> <%= @log_path %><% end %>"

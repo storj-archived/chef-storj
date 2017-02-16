@@ -7,17 +7,15 @@ setgid <%= @group %>
 env APPDIR=<%= @app_dir %>
 env NODE_ENV=<%= @node_env %>
 env HOME=<%= @home %>
+env CONFIG_PATH=<%= @config_path %>
+env LOG_PATH=<%= @log_path %>
 <% if @storj_network %>
 env STORJ_NETWORK=<%= @storj_network %>
 <% end %>
-<% if @storj_bridge %>
-env STORJ_BRIDGE=<%= @storj_bridge %>
-<% end %>
-env SHARE_PW=<%= @share_pw %>
 
 script
     chdir $APPDIR
-    exec bash -c 'source <%= @home %>/.nvm/nvm.sh && exec node <%= @node_index %> -p $SHARE_PW start >> <%= @log_path %> 2>&1'
+    exec bash -c "source $HOME/.nvm/nvm.sh && exec STORJ_NETWORK=<%= @storj_network %> bin/storjshare.js start -c $CONFIG_PATH --detached<% if @log_path %> >> <%= @log_path %><% end %>"
 end script
 
 start on startup

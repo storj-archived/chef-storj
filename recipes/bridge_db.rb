@@ -140,6 +140,16 @@ template "/etc/init/mongos.conf" do
   })
 end
 
+include_recipe 'logrotate'
+
+logrotate_app 'mongodb' do
+  cookbook 'logrotate'
+  path '/var/log/mongodb/mongo*.log'
+  frequency 'daily'
+  create "644 #{node['mongodb']['user']} #{node['mongodb']['group']}"
+  rotate 7
+end
+
 service "mongod" do
   action :start
 end
