@@ -6,6 +6,7 @@ default['storj']['bridge']['home'] = node['storj']['home']
 default['storj']['bridge']['node-env'] = 'production'
 default['storj']['bridge']['config']['application']['mirrors'] = 6
 default['storj']['bridge']['app-dir'] = "#{node['storj']['bridge']['home']}/bridge"
+default['storj']['bridge']['segment-write-key'] = ''
 default['storj']['bridge']['config-dir'] = '/etc/storj'
 default['storj']['bridge']['user'] = 'storj'
 default['storj']['bridge']['group'] = 'storj'

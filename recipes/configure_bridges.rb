@@ -19,6 +19,7 @@ bridges.each do |name, bridge|
         :node_env => node_env,
         :config_path => config_path,
         :storj_network => node['storj']['bridge']['storj-network'],
+        :segment_write_key => node['storj']['bridge']['segment-write-key'],
         :log_path => log_path,
         :home => node['storj']['bridge']['home']
       })
@@ -35,6 +36,7 @@ bridges.each do |name, bridge|
         :node_env => node_env,
         :config_path => config_path,
         :storj_network => node['storj']['bridge']['storj-network'],
+        :segment_write_key => node['storj']['bridge']['segment-write-key'],
         :log_path => log_path,
         :home => node['storj']['bridge']['home']
       })
