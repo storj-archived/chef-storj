@@ -10,4 +10,5 @@ Environment=NODE_ENV=<%= @node_env %>
 Environment=HOME=<%= @home %>
 Environment=STORJ_NETWORK=<%= @storj_network %>
 Environment=CONFIG_PATH=<%= @config_path %>
+Environment=SEGMENT_WRITE_KEY=<%= @segment_write_key %>
 ExecStart=/bin/bash -c 'source $HOME/.nvm/nvm.sh && cd $APPDIR && exec node bin/storj-bridge.js --config $CONFIG_PATH >> <%= @log_path %> 2>&1'

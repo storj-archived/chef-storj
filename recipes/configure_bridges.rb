@@ -2,6 +2,10 @@ default_bridge = node['storj']['bridge']['config']
 bridges = node['storj']['bridge']['instances'] || default_bridge
 init_style = node['storj']['bridge']['init_style'] || node['storj']['init_style']
 
+bash 'systemd_reload' do
+  code "systemctl daemon-reload"
+end
+
 bridges.each do |name, bridge|
   instance_name = 'bridge-' + name
   node_env = node['storj']['bridge']['node-env']
@@ -23,6 +27,8 @@ bridges.each do |name, bridge|
         :log_path => log_path,
         :home => node['storj']['bridge']['home']
       })
+      notifies :run, "bash[systemd_reload]", :immediately
+      notifies :restart, "service[#{instance_name}]"
       action :create
     end
   else
