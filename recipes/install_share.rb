@@ -172,6 +172,7 @@ template File.join(config_path) do
     :config => farmer_config
   })
   action :create
+  notifies :restart, 'service[share]'
 end
 
 # Install or Update StorjShare and restart on any changes
