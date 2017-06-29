@@ -56,6 +56,13 @@ directory "/data/mongodb/data" do
   action :create
 end
 
+directory "/data/mongodb/keys" do
+  recursive true
+  owner "mongodb"
+  group "mongodb"
+  action :create
+end
+
 directory "/data/mongodb/config" do
   recursive true
   owner "mongodb"
@@ -80,7 +87,7 @@ template "/etc/mongodb/mongod" do
   })
 end
 
-template "/etc/init/mongod-delayed.conf" do
+template "/etc/init/mongod.conf" do
   source 'mongo.conf.erb'
   variables ({
     :config => '/etc/mongodb/mongod',

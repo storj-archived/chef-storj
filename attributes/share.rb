@@ -6,7 +6,7 @@ default['storj']['share']['log_dir'] = '/var/log/storj'
 default['storj']['share']['log_file'] = 'share.log'
 default['storj']['share']['repo'] = 'https://github.com/Storj/storjshare-daemon.git'
 default['storj']['share']['node_env'] = 'production'
-default['storj']['share']['revision'] = 'v2.3.0'
+default['storj']['share']['revision'] = 'v3.3.0'
 default['storj']['share']['config_dir'] = '/etc/storj'
 default['storj']['share']['config_file_name'] = 'share.json'
 default['storj']['share']['data_dir'] = 'data'
@@ -15,7 +15,8 @@ default['storj']['share']['migration_key_path'] = '/opt/storj/data/id_ecdsa'
 default['storj']['share']['migration_data_path'] = '/opt/storj/.storjshare'
 
 default['storj']['share']['config']['maxOfferConcurrency'] = 3
-default['storj']['share']['config']['paymentAddress'] = '12sudHQtCt8Wp9X7V9U69CjzG6SFCKvgEZ'
+# Update the paymentAddress here otherwise you will not receive your payments
+default['storj']['share']['config']['paymentAddress'] = '0x5ef2c8531b8abaaf6acd47a33e69cb223083d538'
 default['storj']['share']['config']['bridgeUri'] = 'https://api.storj.io'
 default['storj']['share']['config']['seedList'] = [ ]
 default['storj']['share']['config']['rpcAddress'] = '127.0.0.1'
