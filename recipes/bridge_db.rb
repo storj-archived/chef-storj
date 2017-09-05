@@ -2,7 +2,7 @@ include_recipe "storj"
 
 # Generating SSL certs and keys...
 # openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out mongodb-server-cert.crt -keyout mongodb-server-cert.key
-#  openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out mongodb-client-cert.crt -keyout mongodb-client-cert.key
+# openssl req -newkey rsa:2048 -new -x509 -days 365 -nodes -out mongodb-client-cert.crt -keyout mongodb-client-cert.key
 # cat mongodb-server-cert.key mongodb-server-cert.crt > mongodb-server.pem
 # cat mongodb-client-cert.key mongodb-client-cert.crt > mongodb-client.pem
 # Copy server and client pem into /etc/mongodb/keys
