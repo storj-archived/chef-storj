@@ -1,3 +1,6 @@
+**Notice: Development on this repository is currently on pause during our v3 rearchitecture. Please see [storj/storj](https://github.com/storj/storj) for ongoing v3 development.**
+# Chef Storj
+
 Description
 ===========
 This cookbook deploys and configures the various Storj services. It is intended to be as open minded as possible such that you can build a local dev cluster using chef-zero or deploy production infrastructure.
